@@ -2,8 +2,11 @@
 
 Node::Node() {}
 Node::Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
-           int depth_, glm::dmat4x4 const& localtransform_, glm::dmat4x4 const& worldtransform_) : parent_(parent_), children_(children_),
-           name_(name_), path_(path_), depth_(depth_), localtransform_(localtransform_), worldtransform_(worldtransform_) {}
+           int depth_, glm::dmat4x4 const& localtransform_, glm::dmat4x4 const& worldtransform_) : parent_(nullptr), children_(),
+           name_(""), path_(""), depth_(0), localtransform_(localtransform_), worldtransform_(worldtransform_) {}
+        
+Node::Node(std::shared_ptr<Node> const& parent_, std::string const& name_) : parent_(nullptr), name_("") {}
+
 
 std::shared_ptr<Node> Node::getParent() {
     return parent_;

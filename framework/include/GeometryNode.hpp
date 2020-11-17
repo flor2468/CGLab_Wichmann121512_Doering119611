@@ -10,6 +10,9 @@ class GeometryNode : public Node {
 public:
     GeometryNode();
     GeometryNode(model const& geometry_);
+
+    GeometryNode(std::shared_ptr<Node> const& parent_, std::string const& name_);
+
     model const& getGeometry();
     void setGeometry(model const& geometry);
 

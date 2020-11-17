@@ -4,6 +4,10 @@
 #include "application.hpp"
 #include "model.hpp"
 #include "structs.hpp"
+#include "SceneGraph.hpp"
+#include "GeometryNode.hpp"
+#include "CameraNode.hpp"
+#include "PointLightNode.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -23,6 +27,8 @@ class ApplicationSolar : public Application {
   // draw all objects
   void render() const;
 
+  void makeSolarSystem();
+
  protected:
   void initializeShaderPrograms();
   void initializeGeometry();
@@ -40,6 +46,8 @@ class ApplicationSolar : public Application {
   glm::fmat4 m_view_transform;
   // camera projection matrix
   glm::fmat4 m_view_projection;
+
+  SceneGraph planetGraph_;
 };
 
 #endif

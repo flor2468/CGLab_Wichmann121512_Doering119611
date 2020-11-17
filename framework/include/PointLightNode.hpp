@@ -1,8 +1,11 @@
 #ifndef POINT_LIGHT_NODE_HPP
 #define POINT_LIGHT_NODE_HPP
 
-struct PointLightNode {
-    
+#include "Node.hpp"
+
+class PointLightNode : public Node {
+public:
+    PointLightNode();
 };
 
 #endif 

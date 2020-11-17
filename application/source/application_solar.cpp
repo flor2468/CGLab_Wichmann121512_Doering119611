@@ -56,6 +56,54 @@ void ApplicationSolar::render() const {
   glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 }
 
+
+void ApplicationSolar::makeSolarSystem() {
+
+  Node root = Node(nullptr, "root");
+  std::shared_ptr<Node> rootPointer = std::make_shared<Node>(root);
+
+  CameraNode camera = CameraNode();
+
+  // PointLightNode light = PointLightNode();
+
+  GeometryNode sun = GeometryNode(rootPointer, "sun");
+  std::shared_ptr<Node> sunPointer = std::make_shared<Node>(sun);
+
+  Node mercury = Node(rootPointer, "mercury");
+  std::shared_ptr<Node> mercuryPointer = std::make_shared<Node>(mercury);
+
+  Node venus = Node(rootPointer, "venus");
+  std::shared_ptr<Node> venusPointer = std::make_shared<Node>(venus);
+
+  Node earth = Node(rootPointer, "earth");
+  std::shared_ptr<Node> earthPointer = std::make_shared<Node>(earth);
+
+  Node moon = Node(earthPointer, "moon");
+  std::shared_ptr<Node> moonPointer = std::make_shared<Node>(moon);
+
+  Node mars = Node(rootPointer, "mars");
+  std::shared_ptr<Node> marsPointer = std::make_shared<Node>(mars);
+
+  Node jupiter = Node(rootPointer, "jupiter");
+  std::shared_ptr<Node> jupiterPointer = std::make_shared<Node>(jupiter);
+
+  Node saturn = Node(rootPointer, "saturn");
+  std::shared_ptr<Node> saturnPointer = std::make_shared<Node>(saturn);
+  
+  Node uranus = Node(rootPointer, "uranus");
+  std::shared_ptr<Node> uranusPointer = std::make_shared<Node>(uranus);
+
+  Node neptun = Node(rootPointer, "neptun");
+  std::shared_ptr<Node> neptunPointer = std::make_shared<Node>(neptun);
+
+  Node pluto = Node(rootPointer, "pluto");
+  std::shared_ptr<Node> plutoPointer = std::make_shared<Node>(pluto);
+
+}
+
+
+
+
 void ApplicationSolar::uploadView() {
   // vertices are transformed in camera space, so camera transform must be inverted
   glm::fmat4 view_matrix = glm::inverse(m_view_transform);

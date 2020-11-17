@@ -16,6 +16,8 @@ public:
     Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
          int depth_, glm::dmat4x4 const& localtransform_, glm::dmat4x4 const& worldtransform_);
 
+    Node(std::shared_ptr<Node> const& parent_, std::string const& name_);
+
     std::shared_ptr<Node> getParent();
     void setParent(std::shared_ptr<Node> const& node);
     std::shared_ptr<Node> getChild(std::string const& child);
