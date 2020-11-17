@@ -2,23 +2,26 @@
 #define SCENE_GRAPH_HPP
 
 #include <iostream>
+// #include <stdio.h>
 #include <cmath>
+#include <memory> 
 #include <Node.hpp>
 
 class SceneGraph {
 public:
     SceneGraph();
-    SceneGraph(std::string const& name_, Node const& root_);
+    SceneGraph(std::string const& name_, std::shared_ptr<Node> const& root_);
 
     std::string getName();
-    void setName(std::string const& name);
-    Node getRoot();
-    void setRoot(Node const& root);
+    std::shared_ptr<Node> getRoot();
     std::string printGraph();
 
 private:
+    void setName(std::string const& name);
+    void setRoot(std::shared_ptr<Node> const& root);
+
     std::string name_;
-    Node root_;
+    std::shared_ptr<Node> root_;
 
 };
 

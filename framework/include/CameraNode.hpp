@@ -20,7 +20,7 @@ public:
 private:
     bool isPerspective_;
     bool isEnabled_;
-    glm::dmat4x4 const& projectionMatrix_;
+    glm::dmat4x4 projectionMatrix_;
 
 };
 

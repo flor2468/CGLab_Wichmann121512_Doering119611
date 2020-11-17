@@ -1,36 +1,36 @@
 #include <Node.hpp>
 
 Node::Node() {}
-Node::Node(Node const& parent_, std::list<Node> const& children_, std::string const& name_, std::string const& path_, 
+Node::Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
            int depth_, glm::dmat4x4 const& localtransform_, glm::dmat4x4 const& worldtransform_) : parent_(parent_), children_(children_),
            name_(name_), path_(path_), depth_(depth_), localtransform_(localtransform_), worldtransform_(worldtransform_) {}
 
-Node Node::getParent() {
+std::shared_ptr<Node> Node::getParent() {
     return parent_;
 }
 
 
-void Node::setParent(Node const& node) {
+void Node::setParent(std::shared_ptr<Node> const& node) {
     parent_ = node;
 }
 
 
-Node Node::getChild(std::string const& child) {
-    for (Node n : children_) {
-        if (n.getName() == child) {
+std::shared_ptr<Node> Node::getChild(std::string const& child) {
+    for (std::shared_ptr<Node> n : children_) {
+        if (n->getName() == child) {
             return n;
         }
     }
 }
 
-std::list<Node> Node::getChildrenList() {
+std::list<std::shared_ptr<Node>> Node::getChildrenList() {
     return children_;
 }
 
 
-void Node::setChildren(std::list<Node> const& nodes) {
-    for (Node c : children_) {
-        for (Node n : nodes) {
+void Node::setChildren(std::list<std::shared_ptr<Node>> const& nodes) {
+    for (std::shared_ptr<Node> c : children_) {
+        for (std::shared_ptr<Node> n : nodes) {
             c = n;
         }
     }
@@ -72,15 +72,15 @@ void Node::setWorldTransform(glm::dmat4x4 const& worldtransform) {
 }
 
 
-void Node::addChildren(Node const& node) {
+void Node::addChildren(std::shared_ptr<Node> const& node) {
     children_.push_back(node);
 }
 
 
-Node Node::removeChildren(std::string const& child) {
-    for (Node c : children_) {
-        if (c.getName().compare(child) == 0) {
-            children_.erase(c);
+std::shared_ptr<Node> Node::removeChildren(std::string const& child) {
+    for (std::shared_ptr<Node> c : children_) {
+        if (c->getName().compare(child) == 0) {
+            children_.remove(c);
         }
     }
 }

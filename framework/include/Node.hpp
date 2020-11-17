@@ -7,18 +7,20 @@
 #include <list>
 #include <glm.hpp>
 #include <mat4x4.hpp>
+#include <iostream>
+#include <memory>
 
 class Node {
 public:
     Node();
-    Node(Node const& parent_, std::list<Node> const& children_, std::string const& name_, std::string const& path_, 
+    Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
          int depth_, glm::dmat4x4 const& localtransform_, glm::dmat4x4 const& worldtransform_);
 
-    Node getParent();
-    void setParent(Node const& node);
-    Node getChild(std::string const& child);
-    std::list<Node> getChildrenList();
-    void setChildren(std::list<Node> const& nodes);
+    std::shared_ptr<Node> getParent();
+    void setParent(std::shared_ptr<Node> const& node);
+    std::shared_ptr<Node> getChild(std::string const& child);
+    std::list<std::shared_ptr<Node>> getChildrenList();
+    void setChildren(std::list<std::shared_ptr<Node>> const& nodes);
     std::string getName();
     std::string getPath();
     int getDepth();
@@ -26,17 +28,17 @@ public:
     void setLocalTransform(glm::dmat4x4 const& localtransform);
     glm::dmat4x4 getWorldTransform();
     void setWorldTransform(glm::dmat4x4 const& worldtransform);
-    void addChildren(Node const& node);
-    Node removeChildren(std::string const& children);
+    void addChildren(std::shared_ptr<Node> const& node);
+    std::shared_ptr<Node> removeChildren(std::string const& children);
 
 private:
-    Node const& parent_;
-    std::list<Node> const& children_;
-    std::string const& name_;
-    std::string const& path_;
+    std::shared_ptr<Node> parent_;
+    std::list<std::shared_ptr<Node>> children_;
+    std::string name_;
+    std::string path_;
     int depth_;
-    glm::dmat4x4 const& localtransform_;
-    glm::dmat4x4 const& worldtransform_;
+    glm::dmat4x4 localtransform_;
+    glm::dmat4x4 worldtransform_;
 
 };
 

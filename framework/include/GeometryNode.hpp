@@ -14,7 +14,7 @@ public:
     void setGeometry(model const& geometry);
 
 private:
-    model const& geometry_;
+    model geometry_;
 
 };
 
