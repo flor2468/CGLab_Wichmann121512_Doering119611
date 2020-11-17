@@ -5,8 +5,8 @@
 #include <cmath>
 #include <math.h>
 #include <list>
-#include <glm.hpp>
-#include <mat4x4.hpp>
+#include <../../external/glm-0.9.6.3/glm/glm.hpp>
+#include <../../external/glm-0.9.6.3/glm/mat4x4.hpp>
 #include <iostream>
 #include <memory>
 

@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <mat4x4.hpp>
+// #include <external/glm-0.9.6.3/glm/mat4x4.hpp>
 #include <Node.hpp>
 
 class CameraNode : public Node {
