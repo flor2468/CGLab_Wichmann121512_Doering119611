@@ -1,11 +1,16 @@
 #ifndef POINT_LIGHT_NODE_HPP
 #define POINT_LIGHT_NODE_HPP
 
+#include <iostream>
+#include <cmath>
 #include "Node.hpp"
 
-class PointLightNode : public Node {
+struct PointLightNode : public Node {
 public:
-    PointLightNode();
+    // PointLightNode();
+
+private:
+
 };
 
 #endif 

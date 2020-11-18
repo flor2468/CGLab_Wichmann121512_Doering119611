@@ -59,49 +59,135 @@ void ApplicationSolar::render() const {
 
 void ApplicationSolar::makeSolarSystem() {
 
+  // root
+
   Node root = Node(nullptr, "root");
   std::shared_ptr<Node> rootPointer = std::make_shared<Node>(root);
 
+  // SceneGraph
+
+  planetGraph_ = SceneGraph("scene1", rootPointer);
+
+  // camera
+
   CameraNode camera = CameraNode();
 
-  // PointLightNode light = PointLightNode();
+  // light
 
+  PointLightNode light = PointLightNode();
+  std::shared_ptr<PointLightNode> lightPointer = std::make_shared<PointLightNode>(light);
+
+  root.addChildren(lightPointer);
+
+  // sun
+  
   GeometryNode sun = GeometryNode(rootPointer, "sun");
-  std::shared_ptr<Node> sunPointer = std::make_shared<Node>(sun);
+  std::shared_ptr<GeometryNode> sunPointer = std::make_shared<GeometryNode>(sun);
+
+  light.addChildren(sunPointer);
+
+  // mercury
 
   Node mercury = Node(rootPointer, "mercury");
   std::shared_ptr<Node> mercuryPointer = std::make_shared<Node>(mercury);
 
+  GeometryNode geometryMercury = GeometryNode(mercuryPointer, "geometryMercury");
+  std::shared_ptr<GeometryNode> geometryMercuryPointer = std::make_shared<GeometryNode>(geometryMercury);
+
+  // venus
+
   Node venus = Node(rootPointer, "venus");
   std::shared_ptr<Node> venusPointer = std::make_shared<Node>(venus);
+
+  GeometryNode geometryVenus = GeometryNode(venusPointer, "geometryVenus");
+  std::shared_ptr<GeometryNode> geometryVenusPointer = std::make_shared<GeometryNode>(geometryVenus);
+
+  // earth
 
   Node earth = Node(rootPointer, "earth");
   std::shared_ptr<Node> earthPointer = std::make_shared<Node>(earth);
 
+  GeometryNode geometryEarth = GeometryNode(earthPointer, "geometryEarth");
+  std::shared_ptr<GeometryNode> geometryEarthPointer = std::make_shared<GeometryNode>(geometryEarth);
+
+  // moon
+
   Node moon = Node(earthPointer, "moon");
   std::shared_ptr<Node> moonPointer = std::make_shared<Node>(moon);
+
+  GeometryNode geometryMoon = GeometryNode(moonPointer, "geometryMoon");
+  std::shared_ptr<GeometryNode> geometryMoonPointer = std::make_shared<GeometryNode>(geometryMoon);
+
+  // mars
 
   Node mars = Node(rootPointer, "mars");
   std::shared_ptr<Node> marsPointer = std::make_shared<Node>(mars);
 
+  GeometryNode geometryMars = GeometryNode(marsPointer, "geometryMars");
+  std::shared_ptr<GeometryNode> geometryMarsPointer = std::make_shared<GeometryNode>(geometryMars);
+
+  // jupiter
+
   Node jupiter = Node(rootPointer, "jupiter");
   std::shared_ptr<Node> jupiterPointer = std::make_shared<Node>(jupiter);
 
+  GeometryNode geometryJupiter = GeometryNode(jupiterPointer, "geometryJupiter");
+  std::shared_ptr<GeometryNode> geometryJupiterPointer = std::make_shared<GeometryNode>(geometryJupiter);
+
+  // saturn
+
   Node saturn = Node(rootPointer, "saturn");
   std::shared_ptr<Node> saturnPointer = std::make_shared<Node>(saturn);
+
+  GeometryNode geometrySaturn = GeometryNode(saturnPointer, "geometrySaturn");
+  std::shared_ptr<GeometryNode> geometrySaturnPointer = std::make_shared<GeometryNode>(geometrySaturn);
   
+  // uranus
+
   Node uranus = Node(rootPointer, "uranus");
   std::shared_ptr<Node> uranusPointer = std::make_shared<Node>(uranus);
+
+  GeometryNode geometryUranus = GeometryNode(uranusPointer, "geometryUranus");
+  std::shared_ptr<GeometryNode> geometryUranusPointer = std::make_shared<GeometryNode>(geometryUranus);
+
+  // neptun
 
   Node neptun = Node(rootPointer, "neptun");
   std::shared_ptr<Node> neptunPointer = std::make_shared<Node>(neptun);
 
+  GeometryNode geometryNeptun = GeometryNode(neptunPointer, "geometryNeptun");
+  std::shared_ptr<GeometryNode> geometryNeptunPointer = std::make_shared<GeometryNode>(geometryNeptun);
+
+  // pluto
+
   Node pluto = Node(rootPointer, "pluto");
   std::shared_ptr<Node> plutoPointer = std::make_shared<Node>(pluto);
+
+  GeometryNode geometryPluto = GeometryNode(plutoPointer, "geometryPluto");
+  std::shared_ptr<GeometryNode> geometryPlutoPointer = std::make_shared<GeometryNode>(geometryPluto);
+
+  planetGraph_.addNode(sunPointer);
+  planetGraph_.addNode(geometryMercuryPointer);
+  planetGraph_.addNode(geometryVenusPointer);
+  planetGraph_.addNode(geometryEarthPointer);
+  planetGraph_.addNode(geometryMoonPointer);
+  planetGraph_.addNode(geometryMarsPointer);
+  planetGraph_.addNode(geometryJupiterPointer);
+  planetGraph_.addNode(geometrySaturnPointer);
+  planetGraph_.addNode(geometryUranusPointer);
+  planetGraph_.addNode(geometryNeptunPointer);
+  planetGraph_.addNode(geometryPlutoPointer);
 
 }
 
 
+void ApplicationSolar::traverseSolarSystem() {
+
+  for (std::shared_ptr<GeometryNode> node : planetGraph_.getNodes()) {
+    
+  }
+
+}
 
 
 void ApplicationSolar::uploadView() {

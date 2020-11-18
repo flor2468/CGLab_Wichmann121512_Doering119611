@@ -8,6 +8,7 @@
 #include "GeometryNode.hpp"
 #include "CameraNode.hpp"
 #include "PointLightNode.hpp"
+#include "SceneGraph.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -28,6 +29,8 @@ class ApplicationSolar : public Application {
   void render() const;
 
   void makeSolarSystem();
+
+  void traverseSolarSystem();
 
  protected:
   void initializeShaderPrograms();

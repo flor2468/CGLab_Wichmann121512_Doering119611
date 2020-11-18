@@ -27,4 +27,11 @@ std::string SceneGraph::printGraph() {
 }
 
 
+void SceneGraph::addNode(std::shared_ptr<GeometryNode> const& node) {
+    nodes_.push_back(node);
+}
 
+
+std::list<std::shared_ptr<GeometryNode>> SceneGraph::getNodes() {
+    return nodes_;
+}

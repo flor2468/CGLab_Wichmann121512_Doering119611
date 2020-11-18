@@ -6,6 +6,7 @@
 #include <cmath>
 #include <memory> 
 #include <Node.hpp>
+#include "GeometryNode.hpp"
 
 class SceneGraph {
 public:
@@ -15,6 +16,11 @@ public:
     std::string getName();
     std::shared_ptr<Node> getRoot();
     std::string printGraph();
+    void addNode(std::shared_ptr<GeometryNode> const& node);
+    std::list<std::shared_ptr<GeometryNode>> getNodes();
+
+protected:
+    std::list<std::shared_ptr<GeometryNode>> nodes_;
 
 private:
     void setName(std::string const& name);
