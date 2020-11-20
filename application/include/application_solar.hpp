@@ -26,7 +26,7 @@ class ApplicationSolar : public Application {
   void resizeCallback(unsigned width, unsigned height);
 
   // draw all objects
-  void render() const;
+  void render();
 
   void makeSolarSystem();
 

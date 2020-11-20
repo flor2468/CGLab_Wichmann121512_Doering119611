@@ -19,10 +19,13 @@ using namespace gl;
 
 #include <iostream>
 
+#include <glm/gtx/string_cast.hpp>
+
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}
- ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
+ // sets the distance of the planet, the bigger the (z) value, the greater the distance
+ ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 10.0f})}
  ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
 {
   initializeGeometry();
@@ -35,29 +38,10 @@ ApplicationSolar::~ApplicationSolar() {
   glDeleteVertexArrays(1, &planet_object.vertex_AO);
 }
 
-void ApplicationSolar::render() const {
-  // bind shader to upload uniforms
-  glUseProgram(m_shaders.at("planet").handle);
-
-  glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
-  model_matrix = glm::translate(model_matrix, glm::fvec3{0.0f, 0.0f, -1.0f});
-  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-                     1, GL_FALSE, glm::value_ptr(model_matrix));
-
-  // extra matrix for normal transformation to keep them orthogonal to surface
-  glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
-  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
-                     1, GL_FALSE, glm::value_ptr(normal_matrix));
-
-  // bind the VAO to draw
-  glBindVertexArray(planet_object.vertex_AO);
-
-  // draw bound vertex array using bound shader
-  glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
-}
-
-
 void ApplicationSolar::makeSolarSystem() {
+
+  // copied from initializeGeometry() to load another sphere
+  // model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
 
   // root
 
@@ -83,6 +67,8 @@ void ApplicationSolar::makeSolarSystem() {
   
   GeometryNode sun = GeometryNode(rootPointer, "sun");
   std::shared_ptr<GeometryNode> sunPointer = std::make_shared<GeometryNode>(sun);
+  // sunPointer->setGeometry(planet_model);
+  sunPointer->setMeshObject(planet_object);
 
   light.addChildren(sunPointer);
 
@@ -94,6 +80,8 @@ void ApplicationSolar::makeSolarSystem() {
   GeometryNode geometryMercury = GeometryNode(mercuryPointer, "geometryMercury");
   std::shared_ptr<GeometryNode> geometryMercuryPointer = std::make_shared<GeometryNode>(geometryMercury);
 
+  geometryMercuryPointer->setMeshObject(planet_object);
+
   // venus
 
   Node venus = Node(rootPointer, "venus");
@@ -101,6 +89,8 @@ void ApplicationSolar::makeSolarSystem() {
 
   GeometryNode geometryVenus = GeometryNode(venusPointer, "geometryVenus");
   std::shared_ptr<GeometryNode> geometryVenusPointer = std::make_shared<GeometryNode>(geometryVenus);
+
+  geometryVenusPointer->setMeshObject(planet_object);
 
   // earth
 
@@ -110,6 +100,8 @@ void ApplicationSolar::makeSolarSystem() {
   GeometryNode geometryEarth = GeometryNode(earthPointer, "geometryEarth");
   std::shared_ptr<GeometryNode> geometryEarthPointer = std::make_shared<GeometryNode>(geometryEarth);
 
+  geometryEarthPointer->setMeshObject(planet_object); 
+
   // moon
 
   Node moon = Node(earthPointer, "moon");
@@ -117,6 +109,8 @@ void ApplicationSolar::makeSolarSystem() {
 
   GeometryNode geometryMoon = GeometryNode(moonPointer, "geometryMoon");
   std::shared_ptr<GeometryNode> geometryMoonPointer = std::make_shared<GeometryNode>(geometryMoon);
+
+  geometryMoonPointer->setMeshObject(planet_object);
 
   // mars
 
@@ -126,6 +120,8 @@ void ApplicationSolar::makeSolarSystem() {
   GeometryNode geometryMars = GeometryNode(marsPointer, "geometryMars");
   std::shared_ptr<GeometryNode> geometryMarsPointer = std::make_shared<GeometryNode>(geometryMars);
 
+  geometryMarsPointer->setMeshObject(planet_object);
+
   // jupiter
 
   Node jupiter = Node(rootPointer, "jupiter");
@@ -134,6 +130,8 @@ void ApplicationSolar::makeSolarSystem() {
   GeometryNode geometryJupiter = GeometryNode(jupiterPointer, "geometryJupiter");
   std::shared_ptr<GeometryNode> geometryJupiterPointer = std::make_shared<GeometryNode>(geometryJupiter);
 
+  geometryJupiterPointer->setMeshObject(planet_object);
+
   // saturn
 
   Node saturn = Node(rootPointer, "saturn");
@@ -141,6 +139,8 @@ void ApplicationSolar::makeSolarSystem() {
 
   GeometryNode geometrySaturn = GeometryNode(saturnPointer, "geometrySaturn");
   std::shared_ptr<GeometryNode> geometrySaturnPointer = std::make_shared<GeometryNode>(geometrySaturn);
+
+  geometrySaturnPointer->setMeshObject(planet_object);
   
   // uranus
 
@@ -150,6 +150,8 @@ void ApplicationSolar::makeSolarSystem() {
   GeometryNode geometryUranus = GeometryNode(uranusPointer, "geometryUranus");
   std::shared_ptr<GeometryNode> geometryUranusPointer = std::make_shared<GeometryNode>(geometryUranus);
 
+  geometryUranusPointer->setMeshObject(planet_object);
+
   // neptun
 
   Node neptun = Node(rootPointer, "neptun");
@@ -158,6 +160,8 @@ void ApplicationSolar::makeSolarSystem() {
   GeometryNode geometryNeptun = GeometryNode(neptunPointer, "geometryNeptun");
   std::shared_ptr<GeometryNode> geometryNeptunPointer = std::make_shared<GeometryNode>(geometryNeptun);
 
+  geometryNeptunPointer->setMeshObject(planet_object);
+
   // pluto
 
   Node pluto = Node(rootPointer, "pluto");
@@ -165,6 +169,8 @@ void ApplicationSolar::makeSolarSystem() {
 
   GeometryNode geometryPluto = GeometryNode(plutoPointer, "geometryPluto");
   std::shared_ptr<GeometryNode> geometryPlutoPointer = std::make_shared<GeometryNode>(geometryPluto);
+
+  geometryPlutoPointer->setMeshObject(planet_object);
 
   planetGraph_.addNode(sunPointer);
   planetGraph_.addNode(geometryMercuryPointer);
@@ -183,11 +189,71 @@ void ApplicationSolar::makeSolarSystem() {
 
 void ApplicationSolar::traverseSolarSystem() {
 
+  makeSolarSystem();
+
+  std::cout << "traverse1" << std::endl;
+  std::cout << planetGraph_.getNodes().size() << std::endl;
+
   for (std::shared_ptr<GeometryNode> node : planetGraph_.getNodes()) {
-    
+    std::cout << "for" << std::endl;
+
+    // translate values set the direction of the rotation 
+    node->getWorldTransform() = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
+    node->getWorldTransform() = glm::translate(node->getWorldTransform(), glm::fvec3{0.0f, 0.0f, -1.0f});
+    glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
+                      1, GL_FALSE, glm::value_ptr(node->getWorldTransform()));
+
+    // extra matrix for normal transformation to keep them orthogonal to surface
+    node->getLocalTransform() = glm::inverseTranspose(glm::inverse(m_view_transform) * node->getWorldTransform());
+    glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
+                      1, GL_FALSE, glm::value_ptr(node->getLocalTransform()));
+
+    // bind the VAO to draw
+    glBindVertexArray(node->getMeshObject().vertex_AO);
+
+    // draw bound vertex array using bound shader
+    glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
+
+    std::cout << "hallo" << std::endl;
+    std::cout << node->getName() << std::endl;
+    std::cout << glm::to_string(node->getLocalTransform()) << std::endl;
+    std::cout << glm::to_string(node->getWorldTransform()) << std::endl;
   }
 
+  std::cout << "traverse2" << std::endl;
+
 }
+
+void ApplicationSolar::render() {
+  // bind shader to upload uniforms
+  glUseProgram(m_shaders.at("planet").handle);
+
+  // translate values set the direction of the rotation 
+  glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
+  model_matrix = glm::translate(model_matrix, glm::fvec3{0.0f, 0.0f, -1.0f});
+  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
+                     1, GL_FALSE, glm::value_ptr(model_matrix));
+
+  // extra matrix for normal transformation to keep them orthogonal to surface
+  glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
+  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
+                     1, GL_FALSE, glm::value_ptr(normal_matrix));
+
+  // bind the VAO to draw
+  glBindVertexArray(planet_object.vertex_AO);
+
+  // draw bound vertex array using bound shader
+  glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+
+  std::cout << "render1" << std::endl;
+
+  traverseSolarSystem();
+
+  std::cout << "render2" << std::endl;
+}
+
+
+
 
 
 void ApplicationSolar::uploadView() {
@@ -293,5 +359,6 @@ void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
 
 // exe entry point
 int main(int argc, char* argv[]) {
+  std::cout << "hallo" << std::endl;
   Application::run<ApplicationSolar>(argc, argv, 3, 2);
 }

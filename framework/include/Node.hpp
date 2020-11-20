@@ -14,7 +14,7 @@ class Node {
 public:
     Node();
     Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
-         int depth_, glm::dmat4x4 const& localtransform_, glm::dmat4x4 const& worldtransform_);
+         int depth_, glm::fmat4 const& localtransform_, glm::fmat4 const& worldtransform_);
 
     Node(std::shared_ptr<Node> const& parent_, std::string const& name_);
 
@@ -26,10 +26,10 @@ public:
     std::string getName();
     std::string getPath();
     int getDepth();
-    glm::dmat4x4 getLocalTransform();
-    void setLocalTransform(glm::dmat4x4 const& localtransform);
-    glm::dmat4x4 getWorldTransform();
-    void setWorldTransform(glm::dmat4x4 const& worldtransform);
+    glm::fmat4 getLocalTransform();
+    void setLocalTransform(glm::fmat4 const& localtransform);
+    glm::fmat4 getWorldTransform();
+    void setWorldTransform(glm::fmat4 const& worldtransform);
     void addChildren(std::shared_ptr<Node> const& node);
     std::shared_ptr<Node> removeChildren(std::string const& children);
 
@@ -39,8 +39,8 @@ private:
     std::string name_;
     std::string path_;
     int depth_;
-    glm::dmat4x4 localtransform_;
-    glm::dmat4x4 worldtransform_;
+    glm::fmat4 localtransform_;
+    glm::fmat4 worldtransform_;
 
 };
 

@@ -1,7 +1,7 @@
 #include <CameraNode.hpp>
 
 CameraNode::CameraNode() {}
-CameraNode::CameraNode(bool isPerspective_, bool isEnabled_, glm::dmat4x4 const& projectionMatrix_) : isPerspective_(isPerspective_), isEnabled_(isEnabled_),
+CameraNode::CameraNode(bool isPerspective_, bool isEnabled_, glm::fmat4 const& projectionMatrix_) : isPerspective_(isPerspective_), isEnabled_(isEnabled_),
                        projectionMatrix_(projectionMatrix_) {}
 
 bool CameraNode::getPerspective() {
@@ -20,12 +20,12 @@ void CameraNode::setEnabled(bool isEnabled) {
 }
 
 
-glm::dmat4x4 CameraNode::getProjectionMatrix() {
+glm::fmat4 CameraNode::getProjectionMatrix() {
     return projectionMatrix_;
 }
 
 
-void CameraNode::setProjectionMatrix(glm::dmat4x4 const& projectionMatrix) {
+void CameraNode::setProjectionMatrix(glm::fmat4 const& projectionMatrix) {
     projectionMatrix_ = projectionMatrix;
 }
 
