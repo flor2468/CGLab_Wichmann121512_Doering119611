@@ -23,6 +23,7 @@ public:
     std::shared_ptr<Node> getChild(std::string const& child);
     std::list<std::shared_ptr<Node>> getChildrenList();
     void setChildren(std::list<std::shared_ptr<Node>> const& nodes);
+    void setName(std::string const& name);
     std::string getName();
     std::string getPath();
     int getDepth();

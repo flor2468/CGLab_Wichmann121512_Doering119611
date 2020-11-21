@@ -74,6 +74,10 @@ void Node::setWorldTransform(glm::fmat4 const& worldtransform) {
     worldtransform_ = worldtransform;
 }
 
+void Node::setName(std::string const& name) {
+    name_ = name;
+}
+
 
 void Node::addChildren(std::shared_ptr<Node> const& node) {
     children_.push_back(node);

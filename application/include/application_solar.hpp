@@ -32,6 +32,8 @@ class ApplicationSolar : public Application {
 
   void traverseSolarSystem();
 
+  void createPlanets();
+
  protected:
   void initializeShaderPrograms();
   void initializeGeometry();
