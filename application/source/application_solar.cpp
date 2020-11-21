@@ -563,7 +563,7 @@ void ApplicationSolar::createPlanets() {
 
       node->setWorldTransform(glm::rotate(glm::fmat4{}, float(glfwGetTime() * 0.3f), glm::fvec3{0.0f, 1.0f, 0.0f}));
       node->setWorldTransform(glm::scale(node->getWorldTransform(), glm::vec3{0.3f}));
-      node->setWorldTransform(glm::translate(node->getWorldTransform(), glm::fvec3{0.0f, 0.0f, -50.0f}));
+      node->setWorldTransform(glm::translate(node->getWorldTransform(), glm::fvec3{0.0f, 0.0f, -70.0f}));
       glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
                         1, GL_FALSE, glm::value_ptr(node->getWorldTransform()));
 
