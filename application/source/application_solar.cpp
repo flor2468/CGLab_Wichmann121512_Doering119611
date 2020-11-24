@@ -208,10 +208,10 @@ void ApplicationSolar::makeSolarSystem() {
   root.addChildren(neptunPointer);
   neptun.addChildren(geometryNeptunPointer);
   neptunPointer->setParent(rootPointer);
-  std::cout << "neptunPointer: " << neptunPointer->getParent()->getName() << std::endl;
-  std::cout << "child neptun: " << neptunPointer->getChild("neptun")->getName() << std::endl;
+  // std::cout << "neptunPointer: " << neptunPointer->getParent()->getName() << std::endl;
+  // std::cout << "child neptun: " << neptunPointer->getChild("neptun")->getName() << std::endl;
   geometryNeptunPointer->setParent(neptunPointer);
-  std::cout << "geometryNeptunPointer: " << geometryNeptunPointer->getParent()->getName() << std::endl;
+  // std::cout << "geometryNeptunPointer: " << geometryNeptunPointer->getParent()->getName() << std::endl;
 
   // pluto
 
@@ -240,6 +240,8 @@ void ApplicationSolar::makeSolarSystem() {
   planetGraph_.addNode(geometryUranusPointer);
   planetGraph_.addNode(geometryNeptunPointer);
   planetGraph_.addNode(geometryPlutoPointer);
+
+  std::cout << planetGraph_.printGraph() << std::endl;
 
 }
 
@@ -336,9 +338,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -371,9 +373,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -407,9 +409,9 @@ void ApplicationSolar::createPlanets() {
 
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -442,9 +444,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -477,9 +479,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -512,9 +514,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -547,9 +549,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -582,9 +584,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -617,9 +619,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -652,9 +654,9 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
       // prints for testing
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
-      std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
+      // std::cout << "name: " << node->getName() << std::endl;
+      // std::cout << "local: " << glm::to_string(node->getLocalTransform()) << std::endl;
+      // std::cout << "world: " << glm::to_string(node->getWorldTransform()) << std::endl;
 
     }
 
@@ -662,9 +664,6 @@ void ApplicationSolar::createPlanets() {
   }
 
 }
-
-
-
 
 
 void ApplicationSolar::render() {
@@ -697,9 +696,6 @@ void ApplicationSolar::render() {
 
   // std::cout << "render2" << std::endl;
 }
-
-
-
 
 
 void ApplicationSolar::uploadView() {
@@ -814,6 +810,12 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 //handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
   // mouse handling
+
+  // m_view_transform = glm::rotate(m_view_transform, glm::radians(float(pos_x / 25)), glm::vec3{0.0f, 1.0f, 0.0f});
+  // m_view_transform = glm::rotate(m_view_transform, glm::radians(float(pos_y / 25)), glm::vec3{1.0f, 0.0f, 0.0f});
+
+  // uploadView();
+
 }
 
 //handle resizing
