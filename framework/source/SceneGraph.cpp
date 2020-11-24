@@ -26,7 +26,14 @@ void SceneGraph::setRoot(std::shared_ptr<Node> const& root) {
 
 // function for printing the graph
 std::string SceneGraph::printGraph() {
-    
+    std::string result = "scene graph: ";
+
+    for (auto n : nodes_) {
+        result.append(n->getName());
+        result.append(", ");
+    }
+
+    return result;
 }
 
 // function for adding a node to the "nodes_"-list
