@@ -16,11 +16,11 @@ public:
     std::string getName();
     std::shared_ptr<Node> getRoot();
     std::string printGraph();
-    void addNode(std::shared_ptr<GeometryNode> const& node);
-    std::list<std::shared_ptr<GeometryNode>> getNodes();
+    void addNode(std::shared_ptr<Node> const& node);
+    std::list<std::shared_ptr<Node>> getNodes();
 
 protected:
-    std::list<std::shared_ptr<GeometryNode>> nodes_;
+    std::list<std::shared_ptr<Node>> nodes_;
 
 private:
     void setName(std::string const& name);

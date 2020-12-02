@@ -94,3 +94,13 @@ std::shared_ptr<Node> Node::removeChildren(std::string const& child) {
         }
     }
 }
+
+// getter for meshObject_
+model_object Node::getMeshObject() {
+    return meshObject_;
+}
+
+// setter for meshObject_
+void Node::setMeshObject(model_object const& meshObject) {
+    meshObject_ = meshObject;
+}

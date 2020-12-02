@@ -254,7 +254,7 @@ void ApplicationSolar::traverseSolarSystem() {
   // std::cout << "traverse1" << std::endl;
   // std::cout << planetGraph_.getNodes().size() << std::endl;
 
-  for (std::shared_ptr<GeometryNode> node : planetGraph_.getNodes()) {
+  for (std::shared_ptr<Node> node : planetGraph_.getNodes()) {
     // std::cout << "for" << std::endl;
 
     // translate values set the direction of the rotation 
@@ -300,7 +300,7 @@ void ApplicationSolar::createPlanets() {
   // std::cout << "sun: " << sun << std::endl;
   
   // create the pointer "earth" for getting access to it for setting the WorldTransform-matrice of the moon later
-  std::shared_ptr<GeometryNode> earth;
+  std::shared_ptr<Node> earth;
 
   auto it = list.begin();
   std::advance(it, 3);
@@ -310,7 +310,7 @@ void ApplicationSolar::createPlanets() {
   // std::cout << "hopefully earth: " << earth->getName() << std::endl;
 
   // over every node in the scenegraph should be iterated
-  for (std::shared_ptr<GeometryNode> node : planetGraph_.getNodes()) {
+  for (std::shared_ptr<Node> node : planetGraph_.getNodes()) {
 
     // if it is the "sun" do the following
     if (node->getName().compare("sun") == 0) {

@@ -9,6 +9,8 @@
 #include <../../external/glm-0.9.6.3/glm/mat4x4.hpp>
 #include <iostream>
 #include <memory>
+#include <model.hpp>
+#include "structs.hpp"
 
 class Node {
 public:
@@ -33,6 +35,13 @@ public:
     void setWorldTransform(glm::fmat4 const& worldtransform);
     void addChildren(std::shared_ptr<Node> const& node);
     std::shared_ptr<Node> removeChildren(std::string const& children);
+    model getGeometry();
+    void setGeometry(model const& geometry);
+    model_object getMeshObject();
+    void setMeshObject(model_object const& meshObject);
+
+protected:
+    model_object meshObject_;
 
 private:
     std::shared_ptr<Node> parent_;
