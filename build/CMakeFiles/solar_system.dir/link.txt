@@ -1,1 +1,0 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/solar_system.dir/application/source/application_solar.cpp.o  -o Debug/solar_system  Debug/libframework.a external/glbinding-2.1.1/libglbindingd.a -lGLU -pthread Debug/libglfw3.a -lX11 -lpthread -lXrandr -lXinerama -lXi -lXxf86vm -lrt -lm -lXcursor -lGL 
