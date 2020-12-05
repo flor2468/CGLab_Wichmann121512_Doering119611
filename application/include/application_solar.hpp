@@ -29,9 +29,7 @@ class ApplicationSolar : public Application {
   void render();
 
   void makeSolarSystem();
-
-  void traverseSolarSystem();
-
+  
   void createPlanets();
 
  protected:
