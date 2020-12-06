@@ -20,6 +20,12 @@ using namespace gl;
 #include <iostream>
 
 #include <glm/gtx/string_cast.hpp>
+#include <vector>
+#include "star.hpp"
+#include <random>
+
+
+
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
@@ -351,6 +357,30 @@ void ApplicationSolar::createPlanets() {
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
 
     }
+}
+
+
+void ApplicationSolar::drawStars() {
+  std::vector<Star> stars {};
+
+  const int STARCOUNT = 10;
+
+  int x, y, z, r, g, b;
+  glm::vec3 position, color;
+
+  for (int i = 0; i <= STARCOUNT; i++) {
+    x = std::rand() % 100;
+    y = std::rand() % 100;
+    z = std::rand() % 100;
+    r = std::rand() % 100;
+    g = std::rand() % 100;
+    b = std::rand() % 100;
+    position = {x, y, z};
+    color = {r, g, b};
+    Star s = {position, color};
+    stars.push_back(s);
+  }
+
 }
 
 
