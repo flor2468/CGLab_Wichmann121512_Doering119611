@@ -46,6 +46,8 @@ class ApplicationSolar : public Application {
 
   // cpu representation of model
   model_object planet_object;
+
+  model_object star_object;
   
   // camera transform matrix
   glm::fmat4 m_view_transform;
