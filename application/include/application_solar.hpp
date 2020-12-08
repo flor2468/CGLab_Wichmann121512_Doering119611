@@ -9,6 +9,27 @@
 #include "CameraNode.hpp"
 #include "PointLightNode.hpp"
 #include "SceneGraph.hpp"
+#include "window_handler.hpp"
+#include "utils.hpp"
+#include "shader_loader.hpp"
+#include "model_loader.hpp"
+#include "star.hpp"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <glm/gtx/string_cast.hpp>
+#include <vector>
+#include <random>
+
+#include <glbinding/gl/gl.h>
+// use gl definitions from glbinding 
+using namespace gl;
+
+//dont load gl bindings from glfw
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 // gpu representation of model
 class ApplicationSolar : public Application {
