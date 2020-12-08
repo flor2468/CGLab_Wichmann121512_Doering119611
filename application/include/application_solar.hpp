@@ -40,9 +40,9 @@ class ApplicationSolar : public Application {
   // update uniform values
   void uploadUniforms();
   // upload projection matrix
-  void uploadProjection();
+  void uploadProjection(std::string shader);
   // upload view matrix
-  void uploadView();
+  void uploadView(std::string shader);
 
   // cpu representation of model
   model_object planet_object;

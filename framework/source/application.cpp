@@ -1,5 +1,7 @@
 #include "application.hpp"
 
+#include <iostream>
+
 #include "utils.hpp"
 #include "window_handler.hpp"
 #include "shader_loader.hpp"
@@ -32,11 +34,22 @@ Application::~Application() {
 
 void Application::reloadShaders(bool throwing) {
   // recompile shaders from source files
+
+  std::cout << "updateShaderPrograms" << std::endl;
+
   update_shader_programs(m_shaders, throwing);
   // after shader programs are recompiled, uniform locations may change
+
+  std::cout << "updateUniformLocations" << std::endl;
+
   updateUniformLocations();
+
+  std::cout << "uploadUniforms" << std::endl;
+
   // upload values to new locations
   uploadUniforms();
+
+  std::cout << "reloadShader" << std::endl;
 }
 
 // update shader uniform locations
