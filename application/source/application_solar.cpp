@@ -1,7 +1,9 @@
 #include "application_solar.hpp"
 
-
-
+//constant value for number of stars drawn
+const int STARCOUNT = 1000;
+//vector of stars
+std::vector<float> stars {};
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
@@ -222,7 +224,7 @@ void ApplicationSolar::makeSolarSystem() {
 }
 
 
-void ApplicationSolar::createPlanets() {
+void ApplicationSolar::drawPlanets() {
 
   makeSolarSystem();
 
@@ -305,8 +307,7 @@ void ApplicationSolar::createPlanets() {
       position.z = -11.5f;
       rotMat = earth->getWorldTransform();
     }
-
-      // bind shader to upload uniforms
+    // bind shader to upload uniforms
       glUseProgram(m_shaders.at("planet").handle);
       
       // set the speed of the planet with float(glfwGetTime() * factor)
@@ -331,16 +332,12 @@ void ApplicationSolar::createPlanets() {
 
       // drawing the "sun"
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
-
-    }
+  }
 }
 
 
-void ApplicationSolar::drawStars() {
-  std::vector<float> stars {};
 
-  const int STARCOUNT = 1000;
-
+void ApplicationSolar::initializeStars() {
   float x, y, z, r, g, b;
   std::vector<float> position, color;
 
@@ -361,9 +358,11 @@ void ApplicationSolar::drawStars() {
     stars.push_back(r);
     stars.push_back(g);
     stars.push_back(b);
-
-
   }
+  drawStars();
+}
+
+void ApplicationSolar::drawStars() {
 
     // steps from the lecture:
 
@@ -394,7 +393,7 @@ void ApplicationSolar::render() {
   glUseProgram(m_shaders.at("planet").handle);
 
   // call of the createPlanets() function, where every planet is created
-  createPlanets();
+  drawPlanets();
   
   glUseProgram(m_shaders.at("star").handle);
 
@@ -494,6 +493,7 @@ void ApplicationSolar::initializeGeometry() {
   planet_object.num_elements = GLsizei(planet_model.indices.size());
 
   //draw stars once
+  initializeStars();
   drawStars();
 
 }
