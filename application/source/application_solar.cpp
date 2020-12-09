@@ -338,6 +338,9 @@ void ApplicationSolar::drawPlanets() {
 
 
 void ApplicationSolar::initializeStars() {
+
+  // create floats for storing the values of the 
+  // position and color of each star
   float x, y, z, r, g, b;
   std::vector<float> position, color;
 
@@ -381,6 +384,7 @@ void ApplicationSolar::drawStars() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)* 3), (void*) (sizeof(float)*3));
 
+    // set the draw_mode of the star_object to GL_POINTS, because each star is represented by one point
     star_object.draw_mode = GL_POINTS; 
     star_object.num_elements = GLsizei(STARCOUNT);
 
@@ -388,17 +392,19 @@ void ApplicationSolar::drawStars() {
 
 
 void ApplicationSolar::render() {
-  // bind shader to upload uniforms
 
+  // bind shader to upload the uniforms of the planets
   glUseProgram(m_shaders.at("planet").handle);
 
-  // call of the createPlanets() function, where every planet is created
+  // call of the drawPlanets() function, where every planet is created
   drawPlanets();
   
+  // bin shader to upload the uniforms of the stars
   glUseProgram(m_shaders.at("star").handle);
 
   glm::mat4 identity = glm::mat4();
 
+  // drawing each star
   glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ModelMatrix"),
                      1, GL_FALSE, glm::value_ptr(identity));
 
@@ -409,21 +415,28 @@ void ApplicationSolar::render() {
 
 
 void ApplicationSolar::uploadView(std::string shader) {
+  
   // vertices are transformed in camera space, so camera transform must be inverted
   glm::fmat4 view_matrix = glm::inverse(m_view_transform);
+  
   // upload matrix to gpu
+  // using "shader" to give a string in the function for example for "planet" or "star"
   glUniformMatrix4fv(m_shaders.at(shader).u_locs.at("ViewMatrix"),
                      1, GL_FALSE, glm::value_ptr(view_matrix));
 }
 
 void ApplicationSolar::uploadProjection(std::string shader) {
+
   // upload matrix to gpu
+  // using "shader" to give a string in the function for example for "planet" or "star"
   glUniformMatrix4fv(m_shaders.at(shader).u_locs.at("ProjectionMatrix"),
                      1, GL_FALSE, glm::value_ptr(m_view_projection));
 }
 
 /* update uniform locations */
 void ApplicationSolar::uploadUniforms() { 
+
+  // every shader must be actualized (planet and star)
   // bind shader to which to upload unforms
   glUseProgram(m_shaders.at("planet").handle);
   // upload uniform values to new locations
@@ -447,6 +460,7 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
   m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
 
+  // creating shader program for "star"
   m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/vao.vert"},
                                            {GL_FRAGMENT_SHADER, m_resource_path + "shaders/vao.frag"}}});
   m_shaders.at("star").u_locs["ModelMatrix"] = -1;
@@ -526,6 +540,8 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.1f, 0.0f});
   }
 
+  // actualize the shaders and also view matrix of "planet" and "star"
+
   glUseProgram(m_shaders.at("planet").handle);
   uploadView("planet");
 
@@ -536,15 +552,18 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 
 //handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
+
+  // TODO: recomment it back to have mouse handling!
+
   // mouse handling
-  m_view_transform = glm::rotate(m_view_transform, glm::radians(float(pos_x / 25)), glm::vec3{0.0f, 1.0f, 0.0f});
-  m_view_transform = glm::rotate(m_view_transform, glm::radians(float(pos_y / 25)), glm::vec3{1.0f, 0.0f, 0.0f});
+  // m_view_transform = glm::rotate(m_view_transform, glm::radians(float(pos_x / 25)), glm::vec3{0.0f, 1.0f, 0.0f});
+  // m_view_transform = glm::rotate(m_view_transform, glm::radians(float(pos_y / 25)), glm::vec3{1.0f, 0.0f, 0.0f});
 
-  glUseProgram(m_shaders.at("planet").handle);
-  uploadView("planet");
+  // glUseProgram(m_shaders.at("planet").handle);
+  // uploadView("planet");
 
-  glUseProgram(m_shaders.at("star").handle);
-  uploadView("star");
+  // glUseProgram(m_shaders.at("star").handle);
+  // uploadView("star");
 
 
 }
@@ -553,7 +572,9 @@ void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
 void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
   // recalculate projection matrix for new aspect ration
   m_view_projection = utils::calculate_projection_matrix(float(width) / float(height));
+  
   // upload new projection matrix
+  // actualize the shaders and also projection matrix of "planet" and "star"
   glUseProgram(m_shaders.at("planet").handle);
   uploadProjection("planet");
 
