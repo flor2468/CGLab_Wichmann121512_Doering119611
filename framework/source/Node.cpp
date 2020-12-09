@@ -3,8 +3,10 @@
 // constructors
 Node::Node() {}
 Node::Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
-           int depth_, glm::fmat4 const& localtransform_, glm::fmat4 const& worldtransform_) : parent_(nullptr), children_(),
-           name_(""), path_(""), depth_(0), localtransform_(localtransform_), worldtransform_(worldtransform_) {}
+           int depth_, glm::fmat4 const& localtransform_, glm::fmat4 const& worldtransform_, float const& speed_, glm::vec3 const& size_, 
+           glm::fvec3 const& position_, glm::fmat4 const& rotMat_) : 
+           parent_(nullptr), children_(), name_(""), path_(""), depth_(0), localtransform_(localtransform_), worldtransform_(worldtransform_),
+           speed_(0.0f), size_({0.0f, 0.0f, 0.0f}), position_({0.0f, 0.0f, 0.0f}), rotMat_(glm::fmat4{}) {}
         
 Node::Node(std::shared_ptr<Node> const& parent_, std::string const& name_) : parent_(nullptr), name_("") {}
 
@@ -103,4 +105,37 @@ model_object Node::getMeshObject() {
 // setter for meshObject_
 void Node::setMeshObject(model_object const& meshObject) {
     meshObject_ = meshObject;
+}
+
+
+float Node::getSpeed() {
+    return speed_;
+}
+
+void Node::setSpeed(float const& speed) {
+    speed_ = speed;
+}
+
+glm::fvec3 Node::getSize() {
+    return size_;
+}
+
+void Node::setSize(glm::fvec3 const& size) {
+    size_ = size;
+}
+
+glm::fvec3 Node::getPosition() {
+    return position_;
+}
+
+void Node::setPosition(glm::fvec3 const& position) {
+    position_ = position;
+}
+
+glm::fmat4 Node::getRotMat() {
+    return rotMat_;
+}
+
+void Node::setRotMat(glm::fmat4 const& rotMat) {
+    rotMat_ = rotMat;
 }

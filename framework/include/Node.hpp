@@ -16,7 +16,8 @@ class Node {
 public:
     Node();
     Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>> const& children_, std::string const& name_, std::string const& path_, 
-         int depth_, glm::fmat4 const& localtransform_, glm::fmat4 const& worldtransform_);
+         int depth_, glm::fmat4 const& localtransform_, glm::fmat4 const& worldtransform_, float const& speed_, glm::vec3 const& size_, 
+         glm::fvec3 const& position_, glm::fmat4 const& rotMat_);
 
     Node(std::shared_ptr<Node> const& parent_, std::string const& name_);
 
@@ -40,6 +41,15 @@ public:
     model_object getMeshObject();
     void setMeshObject(model_object const& meshObject);
 
+    float getSpeed();
+    void setSpeed(float const& speed);
+    glm::fvec3 getSize();
+    void setSize(glm::fvec3 const& size);
+    glm::fvec3 getPosition();
+    void setPosition(glm::fvec3 const& position);
+    glm::fmat4 getRotMat();
+    void setRotMat(glm::fmat4 const& rotMat);
+
 protected:
     model_object meshObject_;
 
@@ -51,6 +61,10 @@ private:
     int depth_;
     glm::fmat4 localtransform_;
     glm::fmat4 worldtransform_;
+    float speed_ {0.0f};
+    glm::fvec3 size_ {0.0f, 0.0f, 0.0f};
+    glm::fvec3 position_ {0.0f, 0.0f, 0.0f};
+    glm::fmat4 rotMat_ {glm::fmat4{}};
 
 };
 

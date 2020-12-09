@@ -222,11 +222,75 @@ void ApplicationSolar::makeSolarSystem() {
   planetGraph_.addNode(geometryPlutoPointer);
 
 }
+void ApplicationSolar::initializePlanets() {
+
+  // over every node in the scenegraph should be iterated
+  for (std::shared_ptr<Node> node : planetGraph_.getNodes()) {
+
+    if (node->getName().compare("sun") == 0) {
+
+      node->setSize({2.0f, 2.0f, 2.0f});
+
+    } else if (node->getName().compare("geometryMercury") == 0) {
+
+      node->setSpeed(1.7f);
+      node->setSize({0.3f, 0.3f, 0.3f});
+      node->setPosition({0.0f, 0.0f, -9.5f});
+    
+     } else if (node->getName().compare("geometryVenus") == 0) {
+
+      node->setSpeed(1.7f);
+      node->setSize({0.5f, 0.5f, 0.5f});
+      node->setPosition({0.0f, 0.0f, -10.0f});
+
+    } else if (node->getName().compare("geometryEarth") == 0) {
+
+      node->setSpeed(1.3f);
+      node->setSize({0.5f, 0.5f, 0.5f});
+      node->setPosition({0.0f, 0.0f, -11.5f});
+
+    } else if (node->getName().compare("geometryMars") == 0) {
+
+      node->setSpeed(1.1f);
+      node->setSize({0.4f, 0.4f, 0.4f});
+      node->setPosition({0.0f, 0.0f, -13.0f});
+
+    } else if (node->getName().compare("geometryJupiter") == 0) {
+
+      node->setSpeed(0.8f);
+      node->setSize({1.3f, 1.3f, 1.3f});
+      node->setPosition({0.0f, 0.0f, -14.0f});
+
+    } else if (node->getName().compare("geometrySaturn") == 0) {
+
+      node->setSpeed(0.6f);
+      node->setSize({0.9f, 0.9f, 0.9f});
+      node->setPosition({0.0f, 0.0f, -15.0f});
+
+    } else if (node->getName().compare("geometryNeptun") == 0) {
+
+      node->setSpeed(0.4f);
+      node->setSize({0.75f, 0.75f, 0.75f});
+      node->setPosition({0.0f, 0.0f, -16.0f})
+      ;
+    } else if (node->getName().compare("geometryPluto") == 0) {
+
+      node->setSpeed(0.3f);
+      node->setSize({0.3f, 0.3f, 0.3f});
+      node->setPosition({0.0f, 0.0f, -70.0f});
+
+    } else if (node->getName().compare("geometryMoon") == 0) {
+
+      node->setSpeed(0.5f);
+      node->setSize({0.2f, 0.2f, 0.2f});
+      node->setPosition({0.0f, 0.0f, -11.5f});
+    
+    }
+  }
+}
 
 
 void ApplicationSolar::drawPlanets() {
-
-  makeSolarSystem();
 
 // translate values set the direction of the rotation 
 
@@ -242,82 +306,29 @@ void ApplicationSolar::drawPlanets() {
 
   // over every node in the scenegraph should be iterated
   for (std::shared_ptr<Node> node : planetGraph_.getNodes()) {
-    float speed = 0.0f;
-    glm::vec3 size {0.0f};
-    glm::fvec3 position {0.0f, 0.0f, 0.0f};
-    glm::fmat4 rotMat {};
-
-    if (node->getName().compare("sun") == 0) {
-      size.x = 2.5f;
-      size.y = 2.5f;
-      size.z = 2.5f;
-    } else if (node->getName().compare("geometryMercury") == 0) {
-      speed = 2.0f;
-      size.x = 0.3f;
-      size.y = 0.3f;
-      size.z = 0.3f;
-      position.z = -9.5f;
-     } else if (node->getName().compare("geometryVenus") == 0) {
-      speed = 1.7f;
-      size.x = 0.5f;
-      size.y = 0.5f;
-      size.z = 0.5f;
-      position.z = -10.0f;
-    } else if (node->getName().compare("geometryEarth") == 0) {
-      speed = 1.3f;
-      size.x = 0.5f;
-      size.y = 0.5f;
-      size.z = 0.5f;
-      position.z = -11.5f;
-    } else if (node->getName().compare("geometryMars") == 0) {
-      speed = 1.1f;
-      size.x = 0.4f;
-      size.y = 0.4f;
-      size.z = 0.4f;
-      position.z = -13.0f;
-    } else if (node->getName().compare("geometryJupiter") == 0) {
-      speed = 0.8f;
-      size.x = 1.3f;
-      size.y = 1.3f;
-      size.z = 1.3f;
-      position.z = -14.0f;
-    } else if (node->getName().compare("geometrySaturn") == 0) {
-      speed = 0.6f;
-      size.x = 0.9f;
-      size.y = 0.9f;
-      size.z = 0.9f;
-      position.z = -15.0f;
-    } else if (node->getName().compare("geometryNeptun") == 0) {
-      speed = 0.4f;
-      size.x = 0.75f;
-      size.y = 0.75f;
-      size.z = 0.75f;
-      position.z = -16.0f;
-    } else if (node->getName().compare("geometryPluto") == 0) {
-      speed = 0.3f;
-      size.x = 0.3f;
-      size.y = 0.3f;
-      size.z = 0.3f;
-      position.z = -70.0f;
-    } else if (node->getName().compare("geometryMoon") == 0) {
-      speed = 0.5f;
-      size.x = 0.2f;
-      size.y = 0.2f;
-      size.z = 0.2f;
-      position.z = -11.5f;
-      rotMat = earth->getWorldTransform();
-    }
+    
     // bind shader to upload uniforms
       glUseProgram(m_shaders.at("planet").handle);
       
-      // set the speed of the planet with float(glfwGetTime() * factor)
-      node->setWorldTransform(glm::rotate(rotMat, float(glfwGetTime() * speed), glm::fvec3{0.0f, 1.0f, 0.0f}));
+      // every value for speed, size, position and rotMat is set in initializePlanets()
 
-      // set the size of 2.5f (relativly big)
-      node->setWorldTransform(glm::scale(node->getWorldTransform(), size));
+      if (node->getName().compare("geometryMoon") == 0) {
+        
+        // special case for the moon: needs the worldTransform-matrix from the earth to rotate around the earth
+        node->setWorldTransform(glm::rotate(earth->getWorldTransform(), float(glfwGetTime() * node->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f}));
 
-      // set the position in the middle of the plane
-      node->setWorldTransform(glm::translate(node->getWorldTransform(), position));
+      } else {
+
+        // set the speed of the planet with float(glfwGetTime() * factor)
+        node->setWorldTransform(glm::rotate(node->getRotMat(), float(glfwGetTime() * node->getSpeed()), glm::fvec3{0.0f, 1.0f, 0.0f}));
+
+      }
+
+      // set the size 
+      node->setWorldTransform(glm::scale(node->getWorldTransform(), node->getSize()));
+
+      // set the position 
+      node->setWorldTransform(glm::translate(node->getWorldTransform(), node->getPosition()));
       glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
                         1, GL_FALSE, glm::value_ptr(node->getWorldTransform()));
 
@@ -330,11 +341,10 @@ void ApplicationSolar::drawPlanets() {
       // bind the VAO to draw
       glBindVertexArray(node->getMeshObject().vertex_AO);
 
-      // drawing the "sun"
+      // drawing the planets
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
   }
 }
-
 
 
 void ApplicationSolar::initializeStars() {
@@ -364,6 +374,7 @@ void ApplicationSolar::initializeStars() {
   }
   drawStars();
 }
+
 
 void ApplicationSolar::drawStars() {
 
@@ -397,6 +408,8 @@ void ApplicationSolar::render() {
   glUseProgram(m_shaders.at("planet").handle);
 
   // call of the drawPlanets() function, where every planet is created
+  makeSolarSystem();
+  initializePlanets();
   drawPlanets();
   
   // bin shader to upload the uniforms of the stars

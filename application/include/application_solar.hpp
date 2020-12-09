@@ -51,6 +51,7 @@ class ApplicationSolar : public Application {
 
   void makeSolarSystem();
   
+  void initializePlanets();
   void drawPlanets();
   void initializeStars();
   void drawStars();
