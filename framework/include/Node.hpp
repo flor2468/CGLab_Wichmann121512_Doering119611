@@ -19,7 +19,7 @@ public:
          int depth_, glm::fmat4 const& localtransform_, glm::fmat4 const& worldtransform_, float const& speed_, glm::vec3 const& size_, 
          glm::fvec3 const& position_, glm::fmat4 const& rotMat_);
 
-    Node(std::shared_ptr<Node> const& parent_, std::string const& name_);
+    Node(std::shared_ptr<Node> const& parent_, std::string const& name_, glm::fvec3 const& color_ = {1.0f, 1.0f, 1.0f});
 
     std::shared_ptr<Node> getParent();
     void setParent(std::shared_ptr<Node> const& node);
@@ -49,6 +49,8 @@ public:
     void setPosition(glm::fvec3 const& position);
     glm::fmat4 getRotMat();
     void setRotMat(glm::fmat4 const& rotMat);
+    void setColor(glm::vec3 const& color);
+    glm::fvec3 getColor();
 
 protected:
     model_object meshObject_;
@@ -65,6 +67,8 @@ private:
     glm::fvec3 size_ {0.0f, 0.0f, 0.0f};
     glm::fvec3 position_ {0.0f, 0.0f, 0.0f};
     glm::fmat4 rotMat_ {glm::fmat4{}};
+
+    glm::fvec3 color_;
 
 };
 

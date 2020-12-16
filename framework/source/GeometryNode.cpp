@@ -16,3 +16,4 @@ model GeometryNode::getGeometry() {
 void GeometryNode::setGeometry(model const& geometry) {
     geometry_ = geometry;
 }
+

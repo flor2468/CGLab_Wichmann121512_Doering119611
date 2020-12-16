@@ -8,7 +8,7 @@ Node::Node(std::shared_ptr<Node> const& parent_, std::list<std::shared_ptr<Node>
            parent_(nullptr), children_(), name_(""), path_(""), depth_(0), localtransform_(localtransform_), worldtransform_(worldtransform_),
            speed_(0.0f), size_({0.0f, 0.0f, 0.0f}), position_({0.0f, 0.0f, 0.0f}), rotMat_(glm::fmat4{}) {}
         
-Node::Node(std::shared_ptr<Node> const& parent_, std::string const& name_) : parent_(nullptr), name_("") {}
+Node::Node(std::shared_ptr<Node> const& parent_, std::string const& name_, glm::fvec3 const& color_) : parent_(nullptr), name_(""), color_({1.0f, 1.0f, 1.0f}) {}
 
 // getter for parent_
 std::shared_ptr<Node> Node::getParent() {
@@ -138,4 +138,13 @@ glm::fmat4 Node::getRotMat() {
 
 void Node::setRotMat(glm::fmat4 const& rotMat) {
     rotMat_ = rotMat;
+}
+
+
+void Node::setColor(glm::fvec3 const& color) {
+    color_ = color;
+}
+
+glm::fvec3 Node::getColor() {
+    return color_;
 }

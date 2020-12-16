@@ -56,6 +56,7 @@ void ApplicationSolar::makeSolarSystem() {
   light.addChildren(sunPointer);
   light.setParent(rootPointer);
   sun.setParent(lightPointer);
+  // sun.setColor({1.0f, 1.0f, 0.0f});
 
   // mercury
 
@@ -224,68 +225,94 @@ void ApplicationSolar::makeSolarSystem() {
 }
 void ApplicationSolar::initializePlanets() {
 
+  // auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
+
   // over every node in the scenegraph should be iterated
   for (std::shared_ptr<Node> node : planetGraph_.getNodes()) {
 
+    
     if (node->getName().compare("sun") == 0) {
 
       node->setSize({2.0f, 2.0f, 2.0f});
+      node->setColor({1.0f, 1.0f, 0.0f});
+      // glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
+      // std::cout << "vor Aufruf:" << std::endl;
+      // std::cout << node->getColor()[0] << std::endl;
+      // std::cout << node->getColor()[1] << std::endl;
+      // std::cout << node->getColor()[2] << std::endl;
+     
 
     } else if (node->getName().compare("geometryMercury") == 0) {
 
       node->setSpeed(1.7f);
       node->setSize({0.3f, 0.3f, 0.3f});
       node->setPosition({0.0f, 0.0f, -9.5f});
+      node->setColor({0.5f, 0.4f, 0.4f});
     
      } else if (node->getName().compare("geometryVenus") == 0) {
 
       node->setSpeed(1.7f);
       node->setSize({0.5f, 0.5f, 0.5f});
       node->setPosition({0.0f, 0.0f, -10.0f});
+      node->setColor({0.9f, 0.5f, 0.0f});
 
     } else if (node->getName().compare("geometryEarth") == 0) {
 
       node->setSpeed(1.3f);
       node->setSize({0.5f, 0.5f, 0.5f});
       node->setPosition({0.0f, 0.0f, -11.5f});
+      node->setColor({0.3f, 0.7f, 0.0f});
 
     } else if (node->getName().compare("geometryMars") == 0) {
 
       node->setSpeed(1.1f);
       node->setSize({0.4f, 0.4f, 0.4f});
       node->setPosition({0.0f, 0.0f, -13.0f});
+      node->setColor({0.8f, 0.0f, 0.1f});
 
     } else if (node->getName().compare("geometryJupiter") == 0) {
 
       node->setSpeed(0.8f);
       node->setSize({1.3f, 1.3f, 1.3f});
       node->setPosition({0.0f, 0.0f, -14.0f});
+      node->setColor({0.7f, 0.7f, 0.6f});
 
     } else if (node->getName().compare("geometrySaturn") == 0) {
 
       node->setSpeed(0.6f);
       node->setSize({0.9f, 0.9f, 0.9f});
       node->setPosition({0.0f, 0.0f, -15.0f});
+      node->setColor({0.9f, 0.8f, 0.4f});
 
     } else if (node->getName().compare("geometryNeptun") == 0) {
 
       node->setSpeed(0.4f);
       node->setSize({0.75f, 0.75f, 0.75f});
-      node->setPosition({0.0f, 0.0f, -16.0f})
+      node->setPosition({0.0f, 0.0f, -16.0f});
+      node->setColor({0.0f, 0.4f, 1.0f});
       ;
     } else if (node->getName().compare("geometryPluto") == 0) {
 
       node->setSpeed(0.3f);
       node->setSize({0.3f, 0.3f, 0.3f});
       node->setPosition({0.0f, 0.0f, -70.0f});
+      node->setColor({0.4f, 0.3f, 0.0f});
 
     } else if (node->getName().compare("geometryMoon") == 0) {
 
       node->setSpeed(0.5f);
       node->setSize({0.2f, 0.2f, 0.2f});
       node->setPosition({0.0f, 0.0f, -11.5f});
+      node->setColor({0.5f, 0.5f, 0.5f});
     
     }
+
+    // glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
+    // std::cout << "nach Aufruf: " << std::endl;
+    // std::cout << node->getColor()[0] << std::endl;
+    // std::cout << node->getColor()[1] << std::endl;
+    // std::cout << node->getColor()[2] << std::endl;
+
   }
 }
 
@@ -337,6 +364,10 @@ void ApplicationSolar::drawPlanets() {
 
       glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
                         1, GL_FALSE, glm::value_ptr(normalMatrix));
+
+
+      auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
+      glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
 
       // bind the VAO to draw
       glBindVertexArray(node->getMeshObject().vertex_AO);
