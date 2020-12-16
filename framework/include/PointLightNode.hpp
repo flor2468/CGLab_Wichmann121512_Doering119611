@@ -9,11 +9,20 @@
 
 struct PointLightNode : public Node {
 public:
-    // PointLightNode();
+    PointLightNode();
+    PointLightNode(float const& lightIntensity_, RGB const& lightColor_, glm::fvec3 const& lightPosition_);
+
+    void setLightIntensity(float const& lightIntensity);
+    float getLightIntensity();
+    void setLightColor(RGB const& lightColor);
+    RGB getLightColor();
+    void setLightPosition(glm::fvec3 lightPosition);
+    glm::fvec3 getLightPosition();
 
 private:
-    float lightIntensity_;
-    RGB lightColor_;
+    float lightIntensity_ = {1.0f};
+    RGB lightColor_ = {1.0f, 1.0f, 1.0f};
+    glm::fvec3 lightPosition_ = {0.0f, 0.0f, 0.0f};
 
 };
 

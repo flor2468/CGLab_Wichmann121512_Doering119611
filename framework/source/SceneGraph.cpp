@@ -45,3 +45,12 @@ void SceneGraph::addNode(std::shared_ptr<Node> const& node) {
 std::list<std::shared_ptr<Node>> SceneGraph::getNodes() {
     return nodes_;
 }
+
+
+void SceneGraph::addLightNode(std::shared_ptr<PointLightNode> const& lightNode) {
+    lightNodes_.push_back(lightNode);
+}
+
+std::list<std::shared_ptr<PointLightNode>> SceneGraph::getLightNodes() {
+    return lightNodes_;
+}

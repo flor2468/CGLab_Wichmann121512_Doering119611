@@ -5,9 +5,11 @@
 
 struct RGB {
 
-    int r_ = 255;
-    int g_ = 255;
-    int b_ = 255;
+    // RGB(float r_, float g_, float b_);
+
+    float r_;
+    float g_;
+    float b_;
 
 };
 

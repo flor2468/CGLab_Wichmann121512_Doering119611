@@ -223,6 +223,27 @@ void ApplicationSolar::makeSolarSystem() {
   planetGraph_.addNode(geometryPlutoPointer);
 
 }
+
+
+void ApplicationSolar::initializeLight() {
+
+  for (auto lightNode : planetGraph_.getLightNodes()) {
+
+    auto intensity_temp = glGetUniformLocation(m_shaders.at("planet").handle, "light_Intensity");
+    glUniform1f(intensity_temp, lightNode->getLightIntensity());
+
+    auto color_temp = glGetUniformLocation(m_shaders.at("planet").handle, "light_Color");    
+    glUniform3f(color_temp, lightNode->getColor()[0], lightNode->getColor()[1], lightNode->getColor()[2]);
+
+    auto position_temp = glGetUniformLocation(m_shaders.at("planet").handle, "light_Position");    
+    glUniform3f(position_temp, lightNode->getPosition()[0], lightNode->getPosition()[1], lightNode->getPosition()[2]);
+  
+  }
+}
+
+
+
+
 void ApplicationSolar::initializePlanets() {
 
   // auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
@@ -234,13 +255,7 @@ void ApplicationSolar::initializePlanets() {
     if (node->getName().compare("sun") == 0) {
 
       node->setSize({2.0f, 2.0f, 2.0f});
-      node->setColor({1.0f, 1.0f, 0.0f});
-      // glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
-      // std::cout << "vor Aufruf:" << std::endl;
-      // std::cout << node->getColor()[0] << std::endl;
-      // std::cout << node->getColor()[1] << std::endl;
-      // std::cout << node->getColor()[2] << std::endl;
-     
+      node->setColor({1.0f, 1.0f, 0.0f});     
 
     } else if (node->getName().compare("geometryMercury") == 0) {
 
@@ -306,13 +321,6 @@ void ApplicationSolar::initializePlanets() {
       node->setColor({0.5f, 0.5f, 0.5f});
     
     }
-
-    // glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
-    // std::cout << "nach Aufruf: " << std::endl;
-    // std::cout << node->getColor()[0] << std::endl;
-    // std::cout << node->getColor()[1] << std::endl;
-    // std::cout << node->getColor()[2] << std::endl;
-
   }
 }
 
@@ -368,6 +376,8 @@ void ApplicationSolar::drawPlanets() {
 
       auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
       glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
+
+      initializeLight();
 
       // bind the VAO to draw
       glBindVertexArray(node->getMeshObject().vertex_AO);
@@ -440,6 +450,7 @@ void ApplicationSolar::render() {
 
   // call of the drawPlanets() function, where every planet is created
   makeSolarSystem();
+  // initializeLight();
   initializePlanets();
   drawPlanets();
   

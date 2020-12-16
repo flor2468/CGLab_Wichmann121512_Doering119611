@@ -55,6 +55,7 @@ class ApplicationSolar : public Application {
   void drawPlanets();
   void initializeStars();
   void drawStars();
+  void initializeLight();
 
  protected:
   void initializeShaderPrograms();
