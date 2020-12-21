@@ -39,13 +39,17 @@ void ApplicationSolar::makeSolarSystem() {
   // camera
 
   CameraNode camera = CameraNode();
+  std::shared_ptr<CameraNode> cameraPointer = std::make_shared<CameraNode>(camera);
+  planetGraph_.setCamera(cameraPointer);
 
   // light
 
-  PointLightNode light = PointLightNode();
+  PointLightNode light = PointLightNode();  
   std::shared_ptr<PointLightNode> lightPointer = std::make_shared<PointLightNode>(light);
 
   root.addChildren(lightPointer);
+
+  planetGraph_.addLightNode(lightPointer);
 
   // sun
   
@@ -240,6 +244,8 @@ void ApplicationSolar::initializeLight() {
   
   }
 }
+
+
 
 
 

@@ -8,6 +8,7 @@
 #include <Node.hpp>
 #include "GeometryNode.hpp"
 #include "PointLightNode.hpp"
+#include "CameraNode.hpp"
 
 class SceneGraph {
 public:
@@ -21,6 +22,8 @@ public:
     std::list<std::shared_ptr<Node>> getNodes();
     void addLightNode(std::shared_ptr<PointLightNode> const& lightNode);
     std::list<std::shared_ptr<PointLightNode>> getLightNodes();
+    std::shared_ptr<CameraNode> getCamera();
+    void setCamera(std::shared_ptr<CameraNode> camera);
 
 
 protected:
@@ -33,6 +36,7 @@ private:
 
     std::string name_;
     std::shared_ptr<Node> root_;
+    std::shared_ptr<CameraNode> camera_;
 
 };
 

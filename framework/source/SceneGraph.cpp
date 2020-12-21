@@ -54,3 +54,11 @@ void SceneGraph::addLightNode(std::shared_ptr<PointLightNode> const& lightNode) 
 std::list<std::shared_ptr<PointLightNode>> SceneGraph::getLightNodes() {
     return lightNodes_;
 }
+
+std::shared_ptr<CameraNode> SceneGraph::getCamera() {
+    return camera_;
+}
+
+void SceneGraph::setCamera(std::shared_ptr<CameraNode> camera) {
+    camera_ = camera;
+}
