@@ -11,16 +11,16 @@ uniform vec3 planet_Color;
 uniform vec3 light_Color;
 uniform vec3 light_Position;
 uniform float light_Intensity;
-
+uniform vec3 camera;
+// boolean if outline of planets should be drawn
+uniform bool Outline;
 
 vec3 LIGHT_AMBIENT = vec3(1.0, 1.0, 1.0);
 vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0);
 vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0);
 float SHININESS = 20.0f;
-
-uniform vec3 camera;
-
 vec4 result;
+vec4 OUTLINE_COLOR = vec4(1.0, 0.0, 0.0, 1.0);
 
 
 void main() {
@@ -36,7 +36,7 @@ void main() {
   vec3 l = actualized_Light_Position - pass_Vertex_Pos;
   l = normalize(l);
 
-  // calculating v vector
+  // calculating v vector (view vector)
   // pos of camera - pos of vertex
   vec3 v = (pass_Camera_Pos - pass_Vertex_Pos);
   v = normalize(v);
@@ -52,5 +52,13 @@ void main() {
 
   result = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
 
-  out_Color = result;
+  if (Outline) {
+      if (dot(normal, v) > 0.0) {
+        out_Color = OUTLINE_COLOR;
+      } else {
+        out_Color = result;
+      }
+  } else {   
+    out_Color = result;
+  }
 }

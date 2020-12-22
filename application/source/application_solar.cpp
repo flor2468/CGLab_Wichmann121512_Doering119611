@@ -4,6 +4,10 @@
 const int STARCOUNT = 1000;
 //vector of stars
 std::vector<float> stars {};
+// location ogf uniform variable "Outline"
+static GLuint g_locationOutline;
+// boolen if outline is active
+GLboolean g_outline = GL_FALSE;
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
@@ -383,6 +387,11 @@ void ApplicationSolar::drawPlanets() {
       auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
       glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
 
+      /** calling/ setting of uniform location */
+      g_locationOutline = glGetUniformLocation(m_shaders.at("planet").handle, "Outline");
+      /** information if outline should be drawn to shader */
+      glUniform1i(g_locationOutline, g_outline);
+
       initializeLight();
 
       // bind the VAO to draw
@@ -573,6 +582,11 @@ void ApplicationSolar::initializeGeometry() {
 
 }
 
+void ApplicationSolar::toggleOutline() {
+  /* change state */
+  g_outline = !g_outline;
+}
+
 ///////////////////////////// callback functions for window events ////////////
 // handle key input
 void ApplicationSolar::keyCallback(int key, int action, int mods) {
@@ -601,6 +615,9 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, 0.1f, 0.0f});
   }
 
+  if (key == GLFW_KEY_O && action == GLFW_PRESS) {
+    toggleOutline();
+  }
   // actualize the shaders and also view matrix of "planet" and "star"
 
   glUseProgram(m_shaders.at("planet").handle);
