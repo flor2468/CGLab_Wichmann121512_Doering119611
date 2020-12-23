@@ -20,7 +20,11 @@ vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0);
 vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0);
 float SHININESS = 20.0f;
 vec4 result;
-vec4 OUTLINE_COLOR = vec4(1.0, 0.0, 0.0, 1.0);
+vec4 OUTLINE_COLOR = vec4(0.0, 1.0, 1.0, 1.0);
+/* Outline thickness for unlit areas */
+float UnlitOutlineThickness = 0.1;
+/* Outline thickness for lit areas */
+float LitOutlineThickness = 0.2;
 
 
 void main() {
@@ -53,11 +57,24 @@ void main() {
   result = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
 
   if (Outline) {
-      if (dot(normal, v) > 0.0) {
-        out_Color = OUTLINE_COLOR;
-      } else {
-        out_Color = result;
-      }
+      //if (dot(normal, v) < 0.01) {
+      //if (dot(v, normal) < mix(UnlitOutlineThickness, LitOutlineThickness, max(0, dot(normal, l)))) {
+        // out_Color = OUTLINE_COLOR;
+        if (dot(normal, v) > 0.6)
+          out_Color = vec4(1.0, 1.0, 1.0, 1.0);
+        else if (dot(normal, v) > 0.2)
+          out_Color = vec4(0.8, 0.8, 0.8, 1.0);
+        else if (dot(normal, v) > 0.1)
+          out_Color = vec4(0.6, 0.6, 0.6, 1.0);
+        else if (dot(normal, v) > -0.4)
+          out_Color = vec4(0.45, 0.45, 0.45, 1.0);
+        else if (dot(normal, v) > -0.7)
+          out_Color = vec4(0.33, 0.33, 0.33, 1.0);
+        else
+          out_Color = vec4(0.2, 0.2, 0.2, 1.0);
+      //} else {
+      //  out_Color = result;
+      //}
   } else {   
     out_Color = result;
   }
