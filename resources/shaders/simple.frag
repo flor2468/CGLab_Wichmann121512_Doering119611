@@ -12,19 +12,14 @@ uniform vec3 light_Color;
 uniform vec3 light_Position;
 uniform float light_Intensity;
 uniform vec3 camera;
-// boolean if outline of planets should be drawn
-uniform bool Outline;
+// boolean if cel shaidng of planets should be active
+uniform bool Cel;
 
 vec3 LIGHT_AMBIENT = vec3(1.0, 1.0, 1.0);
 vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0);
 vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0);
 float SHININESS = 20.0f;
 vec4 result;
-vec4 OUTLINE_COLOR = vec4(0.0, 1.0, 1.0, 1.0);
-/* Outline thickness for unlit areas */
-float UnlitOutlineThickness = 0.1;
-/* Outline thickness for lit areas */
-float LitOutlineThickness = 0.2;
 
 
 void main() {
@@ -56,10 +51,9 @@ void main() {
 
   result = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
 
-  if (Outline) {
-      //if (dot(normal, v) < 0.01) {
-      //if (dot(v, normal) < mix(UnlitOutlineThickness, LitOutlineThickness, max(0, dot(normal, l)))) {
-        // out_Color = OUTLINE_COLOR;
+  // if case for the cel-shading
+  if (Cel) {
+        // different ranges equals different colors
         if (dot(normal, v) > 0.6)
           out_Color = vec4(1.0, 1.0, 1.0, 1.0);
         else if (dot(normal, v) > 0.2)
@@ -72,9 +66,7 @@ void main() {
           out_Color = vec4(0.33, 0.33, 0.33, 1.0);
         else
           out_Color = vec4(0.2, 0.2, 0.2, 1.0);
-      //} else {
-      //  out_Color = result;
-      //}
+    // else for "normal" light/ color
   } else {   
     out_Color = result;
   }

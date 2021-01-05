@@ -39,7 +39,7 @@ class ApplicationSolar : public Application {
   // free allocated objects
   ~ApplicationSolar();
   //activates/ deactivates the drawing of the planet outlines
-  void toggleOutline();
+  void toggleCel();
   // react to key input
   void keyCallback(int key, int action, int mods);
   //handle delta mouse movement input
