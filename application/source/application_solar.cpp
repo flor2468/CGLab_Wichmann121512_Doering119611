@@ -51,6 +51,9 @@ void ApplicationSolar::makeSolarSystem() {
   PointLightNode light = PointLightNode();  
   std::shared_ptr<PointLightNode> lightPointer = std::make_shared<PointLightNode>(light);
 
+  lightPointer->setColor({1.0f, 1.0f, 0.7f});
+  // std::cout << "set lightcolor" << glm::to_string(lightPointer->getColor()) << std::endl;
+
   root.addChildren(lightPointer);
 
   planetGraph_.addLightNode(lightPointer);
@@ -393,6 +396,12 @@ void ApplicationSolar::drawPlanets() {
       glUniform1i(g_locationCel, g_cel);
 
       initializeLight();
+      
+      // for (auto l : planetGraph_.getLightNodes()) {
+
+      //   std::cout << "lightcolor" << glm::to_string(l->getColor()) << std::endl;
+
+      // }
 
       // bind the VAO to draw
       glBindVertexArray(node->getMeshObject().vertex_AO);

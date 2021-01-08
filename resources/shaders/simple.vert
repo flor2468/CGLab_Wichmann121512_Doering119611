@@ -20,6 +20,7 @@ void main(void)
 	gl_Position = (ProjectionMatrix  * ViewMatrix * ModelMatrix) * vec4(in_Position, 1.0);
 	pass_Normal = (NormalMatrix * vec4(in_Normal, 0.0)).xyz;
 
+	// actualize out vectors 
 	pass_Vertex_Pos = ((ViewMatrix * ModelMatrix) * vec4(in_Position, 1.0)).xyz;
 	pass_Camera_Pos = (ViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 	pass_ViewMatrix = ViewMatrix;

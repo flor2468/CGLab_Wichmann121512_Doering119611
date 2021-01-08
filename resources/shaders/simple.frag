@@ -15,16 +15,16 @@ uniform vec3 camera;
 // boolean if cel shaidng of planets should be active
 uniform bool Cel;
 
-vec3 LIGHT_AMBIENT = vec3(1.0, 1.0, 1.0);
-vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0);
-vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0);
+vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be very bright)
+vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0); // 1.0 
+vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0); // 1.0
 float SHININESS = 20.0f;
 vec4 result;
 
 
 void main() {
-  out_Color = vec4(abs(normalize(pass_Normal)), 1.0);
-  out_Color = vec4(planet_Color, 1.0);
+  //out_Color = vec4(abs(normalize(pass_Normal)), 1.0);
+  //out_Color = vec4(planet_Color, 1.0);
 
   // calculating the normal
   vec3 normal = normalize(pass_Normal);
@@ -37,7 +37,8 @@ void main() {
 
   // calculating v vector (view vector)
   // pos of camera - pos of vertex
-  vec3 v = (pass_Camera_Pos - pass_Vertex_Pos);
+  vec3 actualized_Camera_Position = (pass_ViewMatrix * vec4(pass_Camera_Pos, 1.0f)).xyz;
+  vec3 v = (actualized_Camera_Position - pass_Vertex_Pos);
   v = normalize(v);
 
   // calculate h = l + v
@@ -66,6 +67,12 @@ void main() {
           out_Color = vec4(0.33, 0.33, 0.33, 1.0);
         else
           out_Color = vec4(0.2, 0.2, 0.2, 1.0);
+
+        // blue thick line over the planet (like a ring)
+        // if (abs(dot(normal, v)) < 0.2) {
+        //   out_Color = vec4(0.0, 0.0, 1.0, 1.0);
+        // }
+
     // else for "normal" light/ color
   } else {   
     out_Color = result;
