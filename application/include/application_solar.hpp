@@ -14,7 +14,7 @@
 #include "shader_loader.hpp"
 #include "model_loader.hpp"
 #include "star.hpp"
-#include "external/stb_image-2.0.6/stb_image.h"
+#include "../../external/stb_image-2.0.6/stb_image.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>

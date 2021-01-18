@@ -4,7 +4,7 @@ in vec3 pass_Normal;
 in vec3 pass_Vertex_Pos;
 in vec3 pass_Camera_Pos;
 in mat4 pass_ViewMatrix;
-in vec2 fTexCoord;
+in vec2 pass_TexCoord;
 
 out vec4 out_Color;
 
@@ -25,7 +25,7 @@ float SHININESS = 20.0f;
 vec4 result;
 
 // textures
-uniform sampler2D TextureSnow;
+uniform sampler2D TextureSun;
 
 
 
@@ -59,7 +59,7 @@ void main() {
 
   result = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
 
-  vec4 texel0 = texture(TextureRock, fTexCoord);
+  vec4 texel0 = texture(TextureSun, pass_TexCoord);
 
   // if case for the cel-shading
   if (Cel) {
@@ -81,7 +81,9 @@ void main() {
         // if (abs(dot(normal, v)) < 0.2) {
         //   out_Color = vec4(0.0, 0.0, 1.0, 1.0);
         // }
-
+   // else for texture
+  } else if (Texture) {   
+    out_Color = result * texel0;
     // else for "normal" light/ color
   } else {   
     out_Color = result;

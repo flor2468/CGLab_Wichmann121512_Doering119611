@@ -409,26 +409,28 @@ void ApplicationSolar::drawPlanets() {
 
       // TEXTURES ****************************************************************************
 
+      /** calling/ setting of uniform location */
+      g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
       /* information if textures should be drawn to shader */
       glUniform1i(g_locationTexture, g_texture);
 
-      g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
-
       // Sun
+      /** calling/ setting of uniform location */
+      g_locationTextureSun = glGetUniformLocation(m_shaders.at("planet").handle, "TextureSun");
+      /** drawScene */
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, g_textureSun);
       glUniform1i(g_locationTextureSun, 0);
-
-      g_locationTextureSun = glGetUniformLocation(m_shaders.at("planet").handle, "TextureSun");
-
+      
+      /** creation of texture object - draw */
       int width, height, comp;
-      GLubyte* data = stbi_load("../resources/textures/sunmap.jpg", &width, &height, &comp, 4);
+      GLubyte* data = stbi_load("../../resources/textures/sunmap.jpg", &width, &height, &comp, 4);
 
       glGenTextures(1, &g_textureSun);
       glBindTexture(GL_TEXTURE_2D, g_textureSun);
 
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
+  
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -442,12 +444,6 @@ void ApplicationSolar::drawPlanets() {
 
 
       initializeLight();
-      
-      // for (auto l : planetGraph_.getLightNodes()) {
-
-      //   std::cout << "lightcolor" << glm::to_string(l->getColor()) << std::endl;
-
-      // }
 
       // bind the VAO to draw
       glBindVertexArray(node->getMeshObject().vertex_AO);
