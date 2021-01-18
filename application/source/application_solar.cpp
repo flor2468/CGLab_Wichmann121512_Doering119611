@@ -592,7 +592,7 @@ void ApplicationSolar::initializeShaderPrograms() {
 // load models
 void ApplicationSolar::initializeGeometry() {
 
-  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL);
+  model planet_model = model_loader::obj(m_resource_path + "models/sphere.obj", model::NORMAL | model::TEXCOORD);
 
   // generate vertex array object
   glGenVertexArrays(1, &planet_object.vertex_AO);
