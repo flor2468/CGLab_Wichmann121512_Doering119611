@@ -4,6 +4,7 @@ in vec3 pass_Normal;
 in vec3 pass_Vertex_Pos;
 in vec3 pass_Camera_Pos;
 in mat4 pass_ViewMatrix;
+in vec2 fTexCoord;
 
 out vec4 out_Color;
 
@@ -12,14 +13,20 @@ uniform vec3 light_Color;
 uniform vec3 light_Position;
 uniform float light_Intensity;
 uniform vec3 camera;
-// boolean if cel shaidng of planets should be active
+// boolean if cel shading of planets should be active
 uniform bool Cel;
+// boolean if texture of planets should be active
+uniform bool Texture;
 
 vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be very bright)
 vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0); // 1.0 
 vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0); // 1.0
 float SHININESS = 20.0f;
 vec4 result;
+
+// textures
+uniform sampler2D TextureSnow;
+
 
 
 void main() {
@@ -51,6 +58,8 @@ void main() {
   vec3 specular_part = pow(max(dot(h, normal), 0), SHININESS) * LIGHT_SPECULAR;
 
   result = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
+
+  vec4 texel0 = texture(TextureRock, fTexCoord);
 
   // if case for the cel-shading
   if (Cel) {

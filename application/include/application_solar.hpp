@@ -14,6 +14,7 @@
 #include "shader_loader.hpp"
 #include "model_loader.hpp"
 #include "star.hpp"
+#include "external/stb_image-2.0.6/stb_image.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
@@ -22,6 +23,8 @@
 #include <glm/gtx/string_cast.hpp>
 #include <vector>
 #include <random>
+
+
 
 #include <glbinding/gl/gl.h>
 // use gl definitions from glbinding 

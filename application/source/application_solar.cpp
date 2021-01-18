@@ -9,6 +9,18 @@ static GLuint g_locationCel;
 // boolen if cel is active
 GLboolean g_cel = GL_FALSE;
 
+/** sun texture */
+static GLuint g_textureSun;
+/** location of uniform-variable "TextureSun" */
+static GLuint g_locationTextureSun;
+/** location of uniform-variable "Texture" */
+static GLuint g_locationTexture;
+/** boolean if texture is active */
+GLboolean g_texture = GL_TRUE;
+
+
+
+
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}, star_object{}
@@ -395,6 +407,40 @@ void ApplicationSolar::drawPlanets() {
       /** information if cel should be drawn to shader */
       glUniform1i(g_locationCel, g_cel);
 
+      // TEXTURES ****************************************************************************
+
+      /* information if textures should be drawn to shader */
+      glUniform1i(g_locationTexture, g_texture);
+
+      g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
+
+      // Sun
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, g_textureSun);
+      glUniform1i(g_locationTextureSun, 0);
+
+      g_locationTextureSun = glGetUniformLocation(m_shaders.at("planet").handle, "TextureSun");
+
+      int width, height, comp;
+      GLubyte* data = stbi_load("../resources/textures/sunmap.jpg", &width, &height, &comp, 4);
+
+      glGenTextures(1, &g_textureSun);
+      glBindTexture(GL_TEXTURE_2D, g_textureSun);
+
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+      glBindTexture(GL_TEXTURE_2D, 0);
+
+      stbi_image_free(data);
+
+
+
+      // *************************************************************************************** 
+
+
       initializeLight();
       
       // for (auto l : planetGraph_.getLightNodes()) {
@@ -591,6 +637,13 @@ void ApplicationSolar::initializeGeometry() {
 
 }
 
+
+// (de)activates the texture mode
+void toggleTexture () {
+    g_texture = !g_texture;
+}
+
+
 void ApplicationSolar::toggleCel() {
   /* change state */
   g_cel = !g_cel;
@@ -627,6 +680,11 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
   if (key == GLFW_KEY_O && action == GLFW_PRESS) {
     toggleCel();
   }
+
+  if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+    toggleTexture();
+  }
+
   // actualize the shaders and also view matrix of "planet" and "star"
 
   glUseProgram(m_shaders.at("planet").handle);
