@@ -148,3 +148,11 @@ void Node::setColor(glm::fvec3 const& color) {
 glm::fvec3 Node::getColor() {
     return color_;
 }
+
+char* Node::getTextureImage() {
+    return textureImage_;
+}
+
+void Node::setTextureImage(char* const& textureImage) {
+    textureImage_ = textureImage;
+}

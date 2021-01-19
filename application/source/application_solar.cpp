@@ -10,9 +10,9 @@ static GLuint g_locationCel;
 GLboolean g_cel = GL_FALSE;
 
 /** sun texture */
-static GLuint g_textureSun;
-/** location of uniform-variable "TextureSun" */
-static GLuint g_locationTextureSun;
+static GLuint g_texturePlanet;
+/** location of uniform-variable "TexturePlanet" */
+static GLuint g_locationTexturePlanet;
 /** location of uniform-variable "Texture" */
 static GLuint g_locationTexture;
 /** boolean if texture is active */
@@ -281,6 +281,7 @@ void ApplicationSolar::initializePlanets() {
 
       node->setSize({2.0f, 2.0f, 2.0f});
       node->setColor({1.0f, 1.0f, 0.0f});     
+      node->setTextureImage("../../resources/textures/sunmap.jpg");
 
     } else if (node->getName().compare("geometryMercury") == 0) {
 
@@ -288,6 +289,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.3f, 0.3f, 0.3f});
       node->setPosition({0.0f, 0.0f, -9.5f});
       node->setColor({0.5f, 0.4f, 0.4f});
+      node->setTextureImage("../../resources/textures/mercurymap.jpg");
     
      } else if (node->getName().compare("geometryVenus") == 0) {
 
@@ -295,6 +297,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.5f, 0.5f, 0.5f});
       node->setPosition({0.0f, 0.0f, -10.0f});
       node->setColor({0.9f, 0.5f, 0.0f});
+      node->setTextureImage("../../resources/textures/venusmap.jpg");
 
     } else if (node->getName().compare("geometryEarth") == 0) {
 
@@ -302,6 +305,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.5f, 0.5f, 0.5f});
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.3f, 0.7f, 0.0f});
+      node->setTextureImage("../../resources/textures/earthmap.jpg");
 
     } else if (node->getName().compare("geometryMars") == 0) {
 
@@ -309,6 +313,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.4f, 0.4f, 0.4f});
       node->setPosition({0.0f, 0.0f, -13.0f});
       node->setColor({0.8f, 0.0f, 0.1f});
+      node->setTextureImage("../../resources/textures/marsmap.jpg");
 
     } else if (node->getName().compare("geometryJupiter") == 0) {
 
@@ -316,6 +321,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({1.3f, 1.3f, 1.3f});
       node->setPosition({0.0f, 0.0f, -14.0f});
       node->setColor({0.7f, 0.7f, 0.6f});
+      node->setTextureImage("../../resources/textures/jupitermap.jpg");
 
     } else if (node->getName().compare("geometrySaturn") == 0) {
 
@@ -323,6 +329,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.9f, 0.9f, 0.9f});
       node->setPosition({0.0f, 0.0f, -15.0f});
       node->setColor({0.9f, 0.8f, 0.4f});
+      node->setTextureImage("../../resources/textures/saturnmap.jpg");
 
     } else if (node->getName().compare("geometryNeptun") == 0) {
 
@@ -330,6 +337,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.75f, 0.75f, 0.75f});
       node->setPosition({0.0f, 0.0f, -16.0f});
       node->setColor({0.0f, 0.4f, 1.0f});
+      node->setTextureImage("../../resources/textures/neptunemap.jpg");
       ;
     } else if (node->getName().compare("geometryPluto") == 0) {
 
@@ -337,6 +345,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.3f, 0.3f, 0.3f});
       node->setPosition({0.0f, 0.0f, -70.0f});
       node->setColor({0.4f, 0.3f, 0.0f});
+      node->setTextureImage("../../resources/textures/plutomap.jpg");
 
     } else if (node->getName().compare("geometryMoon") == 0) {
 
@@ -344,10 +353,48 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.2f, 0.2f, 0.2f});
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.5f, 0.5f, 0.5f});
+      node->setTextureImage("../../resources/textures/moonmap.jpg");
     
     }
   }
 }
+
+
+void ApplicationSolar::initializeTexture() {
+
+  for (auto node : planetGraph_.getNodes()) {
+
+    /** calling/ setting of uniform location */
+    g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
+    /* information if textures should be drawn to shader */
+    glUniform1i(g_locationTexture, g_texture);
+
+    // Planets
+    /** calling/ setting of uniform location */
+    g_locationTexturePlanet = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
+    /** drawScene */
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
+    glUniform1i(g_locationTexturePlanet, 0);
+    
+    /** creation of texture object - draw */
+    int width, height, comp;
+    GLubyte* data = stbi_load(node->getTextureImage(), &width, &height, &comp, 4);
+
+    glGenTextures(1, &g_texturePlanet);
+    // glBindTexture(GL_TEXTURE_2D, g_textureSun);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    stbi_image_free(data);
+  }
+}
+
 
 
 void ApplicationSolar::drawPlanets() {
@@ -402,47 +449,6 @@ void ApplicationSolar::drawPlanets() {
       auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
       glUniform3f(temp, node->getColor()[0], node->getColor()[1], node->getColor()[2]);
 
-      /** calling/ setting of uniform location */
-      g_locationCel = glGetUniformLocation(m_shaders.at("planet").handle, "Cel");
-      /** information if cel should be drawn to shader */
-      glUniform1i(g_locationCel, g_cel);
-
-      // TEXTURES ****************************************************************************
-
-      /** calling/ setting of uniform location */
-      g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
-      /* information if textures should be drawn to shader */
-      glUniform1i(g_locationTexture, g_texture);
-
-      // Sun
-      /** calling/ setting of uniform location */
-      g_locationTextureSun = glGetUniformLocation(m_shaders.at("planet").handle, "TextureSun");
-      /** drawScene */
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, g_textureSun);
-      glUniform1i(g_locationTextureSun, 0);
-      
-      /** creation of texture object - draw */
-      int width, height, comp;
-      GLubyte* data = stbi_load("../../resources/textures/sunmap.jpg", &width, &height, &comp, 4);
-
-      glGenTextures(1, &g_textureSun);
-      glBindTexture(GL_TEXTURE_2D, g_textureSun);
-
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-  
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-      glBindTexture(GL_TEXTURE_2D, 0);
-
-      stbi_image_free(data);
-
-
-
-      // *************************************************************************************** 
-
-
       initializeLight();
 
       // bind the VAO to draw
@@ -451,6 +457,49 @@ void ApplicationSolar::drawPlanets() {
       // drawing the planets
       glDrawElements(node->getMeshObject().draw_mode, node->getMeshObject().num_elements, model::INDEX.type, NULL);
   }
+
+  // CEL SHADING
+
+  /** calling/ setting of uniform location */
+  g_locationCel = glGetUniformLocation(m_shaders.at("planet").handle, "Cel");
+  /** information if cel should be drawn to shader */
+  glUniform1i(g_locationCel, g_cel);
+
+  initializeTexture();
+
+  // // TEXTURES ****************************************************************************
+
+  // /** calling/ setting of uniform location */
+  // g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
+  // /* information if textures should be drawn to shader */
+  // glUniform1i(g_locationTexture, g_texture);
+
+  // // Sun
+  // /** calling/ setting of uniform location */
+  // g_locationTextureSun = glGetUniformLocation(m_shaders.at("planet").handle, "TextureSun");
+  // /** drawScene */
+  // glActiveTexture(GL_TEXTURE0);
+  // glBindTexture(GL_TEXTURE_2D, g_textureSun);
+  // glUniform1i(g_locationTextureSun, 0);
+  
+  // /** creation of texture object - draw */
+  // int width, height, comp;
+  // GLubyte* data = stbi_load("../../resources/textures/earthmap.jpg", &width, &height, &comp, 4);
+
+  // glGenTextures(1, &g_textureSun);
+  // // glBindTexture(GL_TEXTURE_2D, g_textureSun);
+
+  // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+  // glBindTexture(GL_TEXTURE_2D, 0);
+
+  // stbi_image_free(data);
+
+  // // *************************************************************************************** 
+
 }
 
 
@@ -518,6 +567,7 @@ void ApplicationSolar::render() {
   makeSolarSystem();
   // initializeLight();
   initializePlanets();
+  // initializeTexture();
   drawPlanets();
   
   // bin shader to upload the uniforms of the stars

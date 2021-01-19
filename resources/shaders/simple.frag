@@ -22,10 +22,12 @@ vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be 
 vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0); // 1.0 
 vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0); // 1.0
 float SHININESS = 20.0f;
-vec4 result;
+vec4 colorResult;
+vec4 textureResult;
 
 // textures
-uniform sampler2D TextureSun;
+uniform sampler2D TexturePlanets;
+vec4 texel = texture(TexturePlanets, pass_TexCoord);
 
 
 
@@ -57,10 +59,9 @@ void main() {
   // specular light
   vec3 specular_part = pow(max(dot(h, normal), 0), SHININESS) * LIGHT_SPECULAR;
 
-  result = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
-
-  vec4 texel0 = texture(TextureSun, pass_TexCoord);
-
+  colorResult = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
+  textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * texel.xyz + specular_part * light_Color, 1.0);
+  
   // if case for the cel-shading
   if (Cel) {
         // different ranges equals different colors
@@ -83,9 +84,9 @@ void main() {
         // }
    // else for texture
   } else if (Texture) {   
-    out_Color = result * texel0;
+    out_Color = textureResult;
     // else for "normal" light/ color
   } else {   
-    out_Color = result;
+    out_Color = colorResult;
   }
 }

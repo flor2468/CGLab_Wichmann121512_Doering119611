@@ -51,6 +51,8 @@ public:
     void setRotMat(glm::fmat4 const& rotMat);
     void setColor(glm::vec3 const& color);
     glm::fvec3 getColor();
+    char* getTextureImage();
+    void setTextureImage(char* const& textureImage);
 
 protected:
     model_object meshObject_;
@@ -69,6 +71,7 @@ private:
     glm::fmat4 rotMat_ {glm::fmat4{}};
 
     glm::fvec3 color_;
+    char* textureImage_;
 
 };
 
