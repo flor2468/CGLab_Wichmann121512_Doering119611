@@ -60,7 +60,8 @@ void main() {
   vec3 specular_part = pow(max(dot(h, normal), 0), SHININESS) * LIGHT_SPECULAR;
 
   colorResult = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
-  textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * texel.rgb + specular_part * light_Color, 1.0);
+  // textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * texel.rgb + specular_part * light_Color, 1.0);
+  textureResult = texel;
   
   // if case for the cel-shading
   if (Cel) {

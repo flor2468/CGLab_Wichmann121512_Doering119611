@@ -30,6 +30,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
 {
   initializeGeometry();
   initializeShaderPrograms();
+  // initializeTexture();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -370,7 +371,10 @@ void ApplicationSolar::initializePlanets() {
     /** drawScene */
     glActiveTexture(GL_TEXTURE0+counter);
     glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
-    glUniform1i(g_locationTexturePlanet, 0);
+
+    std::cout << "texturePlanet: " << std::to_string(g_texturePlanet) << std::endl;
+
+    glUniform1i(g_locationTexturePlanet, counter);
 
     counter++;
 
@@ -378,42 +382,7 @@ void ApplicationSolar::initializePlanets() {
 }
 
 
-void ApplicationSolar::initializeTexture() {
 
-  int counter = 0;
-
-  for (auto node : planetGraph_.getNodes()) {
-
-    // /** calling/ setting of uniform location */
-    // g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
-    // /* information if textures should be drawn to shader */
-    // glUniform1i(g_locationTexture, g_texture);
-
-    // // Planets
-    // /** calling/ setting of uniform location */
-    // g_locationTexturePlanet = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
-    // /** drawScene */
-    // glActiveTexture(GL_TEXTURE0+counter);
-    // glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
-    // glUniform1i(g_locationTexturePlanet, 0);
-    
-    /** creation of texture object - draw */
-    int width, height, comp;
-    GLubyte* data = stbi_load(node->getTextureImage(), &width, &height, &comp, 4);
-
-    glGenTextures(1, &g_texturePlanet);
-    // glBindTexture(GL_TEXTURE_2D, g_textureSun);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    stbi_image_free(data);
-  }
-}
 
 
 
@@ -587,8 +556,8 @@ void ApplicationSolar::render() {
   makeSolarSystem();
   // initializeLight();
   initializePlanets();
-  // initializeTexture();
   drawPlanets();
+  initializeTexture();
   
   // bin shader to upload the uniforms of the stars
   glUseProgram(m_shaders.at("star").handle);
@@ -700,8 +669,70 @@ void ApplicationSolar::initializeGeometry() {
   //draw stars once
   initializeStars();
   drawStars();
-  initializeTexture();
+  // initializeTexture();
 
+}
+
+
+void ApplicationSolar::initializeTexture() {
+
+  int counter = 0;
+
+  std::cout << "test" << std::endl;
+
+  std::cout << planetGraph_.getNodes().size() << std::endl;
+
+  // for (auto node : planetGraph_.getNodes()) {
+
+    auto nodes = planetGraph_.getNodes();
+
+    // for (auto i : planetGraph_.getNodes()) {
+
+    //   std::cout << i->getName() << std::endl;
+
+    // }
+
+    auto node = *nodes.begin();
+
+    // std::cout << node->getName() << std::endl;
+
+    
+
+    std::cout << "for Schleife" << counter << std::endl;
+
+    // /** calling/ setting of uniform location */
+    // g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
+    // /* information if textures should be drawn to shader */
+    // glUniform1i(g_locationTexture, g_texture);
+
+    // // Planets
+    // /** calling/ setting of uniform location */
+    // g_locationTexturePlanet = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
+    // /** drawScene */
+    glActiveTexture(GL_TEXTURE0);
+    // glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
+    // glUniform1i(g_locationTexturePlanet, 0);
+    
+    /** creation of texture object - draw */
+    int width, height, comp;
+    GLubyte* data = stbi_load(node->getTextureImage(), &width, &height, &comp, 4);
+
+    glGenTextures(1, &g_texturePlanet);
+    // glBindTexture(GL_TEXTURE_2D, g_textureSun);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
+
+    std::cout << "texturePlanet2: " << std::to_string(g_texturePlanet) << std::endl;
+
+    stbi_image_free(data);
+
+    counter++;
+  // }
 }
 
 
