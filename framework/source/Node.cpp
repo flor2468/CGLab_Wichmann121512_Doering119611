@@ -156,3 +156,12 @@ char* Node::getTextureImage() {
 void Node::setTextureImage(char* const& textureImage) {
     textureImage_ = textureImage;
 }
+
+texture_object Node::getTextureObject() {
+    return tex_;
+}
+
+
+void Node::setTextureObject(texture_object const& tex) {
+    tex_ = tex;
+}

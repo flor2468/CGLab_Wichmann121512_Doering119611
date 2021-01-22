@@ -53,6 +53,8 @@ public:
     glm::fvec3 getColor();
     char* getTextureImage();
     void setTextureImage(char* const& textureImage);
+    texture_object getTextureObject();
+    void setTextureObject(texture_object const& tex);
 
 protected:
     model_object meshObject_;
@@ -72,6 +74,8 @@ private:
 
     glm::fvec3 color_;
     char* textureImage_;
+    texture_object tex_;
+
 
 };
 

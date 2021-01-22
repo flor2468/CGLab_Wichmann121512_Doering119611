@@ -30,6 +30,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
 {
   initializeGeometry();
   initializeShaderPrograms();
+  // initializeTexture();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -278,12 +279,16 @@ void ApplicationSolar::initializePlanets() {
   // over every node in the scenegraph should be iterated
   for (std::shared_ptr<Node> node : planetGraph_.getNodes()) {
 
+    texture_object object;
+    glGenTextures(1, &object.handle);
+    object.target = GL_TEXTURE_2D;
     
     if (node->getName().compare("sun") == 0) {
 
       node->setSize({2.0f, 2.0f, 2.0f});
       node->setColor({1.0f, 1.0f, 0.0f});     
       node->setTextureImage("../../resources/textures/sunmap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometryMercury") == 0) {
 
@@ -292,6 +297,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -9.5f});
       node->setColor({0.5f, 0.4f, 0.4f});
       node->setTextureImage("../../resources/textures/mercurymap.jpg");
+      node->setTextureObject(object);
     
      } else if (node->getName().compare("geometryVenus") == 0) {
 
@@ -300,6 +306,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -10.0f});
       node->setColor({0.9f, 0.5f, 0.0f});
       node->setTextureImage("../../resources/textures/venusmap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometryEarth") == 0) {
 
@@ -308,6 +315,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.3f, 0.7f, 0.0f});
       node->setTextureImage("../../resources/textures/earthmap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometryMars") == 0) {
 
@@ -316,6 +324,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -13.0f});
       node->setColor({0.8f, 0.0f, 0.1f});
       node->setTextureImage("../../resources/textures/marsmap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometryJupiter") == 0) {
 
@@ -324,6 +333,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -14.0f});
       node->setColor({0.7f, 0.7f, 0.6f});
       node->setTextureImage("../../resources/textures/jupitermap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometrySaturn") == 0) {
 
@@ -332,6 +342,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -15.0f});
       node->setColor({0.9f, 0.8f, 0.4f});
       node->setTextureImage("../../resources/textures/saturnmap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometryNeptun") == 0) {
 
@@ -340,7 +351,8 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -16.0f});
       node->setColor({0.0f, 0.4f, 1.0f});
       node->setTextureImage("../../resources/textures/neptunemap.jpg");
-      ;
+      node->setTextureObject(object);
+      
     } else if (node->getName().compare("geometryPluto") == 0) {
 
       node->setSpeed(0.3f);
@@ -348,6 +360,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -70.0f});
       node->setColor({0.4f, 0.3f, 0.0f});
       node->setTextureImage("../../resources/textures/plutomap.jpg");
+      node->setTextureObject(object);
 
     } else if (node->getName().compare("geometryMoon") == 0) {
 
@@ -356,8 +369,13 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.5f, 0.5f, 0.5f});
       node->setTextureImage("../../resources/textures/moonmap.jpg");
+      node->setTextureObject(object);
     
     }
+
+    // initializeTexture();
+
+    object = node->getTextureObject();
 
     /** calling/ setting of uniform location */
     g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
@@ -368,9 +386,15 @@ void ApplicationSolar::initializePlanets() {
     /** calling/ setting of uniform location */
     g_locationTexturePlanet = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
     /** drawScene */
-    glActiveTexture(GL_TEXTURE0+counter);
-    glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
-    glUniform1i(g_locationTexturePlanet, 0);
+    glActiveTexture(GL_TEXTURE1+counter);
+
+    std::cout << "object.target: " << object.target << std::endl;
+    std::cout << "object.handle: " << std::to_string(object.handle) << std::endl;
+
+    // glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
+    glBindTexture(object.target, object.handle);
+    
+    glUniform1i(g_locationTexturePlanet, object.handle);
 
     counter++;
 
@@ -399,19 +423,38 @@ void ApplicationSolar::initializeTexture() {
     
     /** creation of texture object - draw */
     int width, height, comp;
+
+    // texture_object object;
+
+    glActiveTexture(GL_TEXTURE1+counter);
+
     GLubyte* data = stbi_load(node->getTextureImage(), &width, &height, &comp, 4);
 
-    glGenTextures(1, &g_texturePlanet);
+    // glGenTextures(1, &g_texturePlanet);
     // glBindTexture(GL_TEXTURE_2D, g_textureSun);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    // glGenTextures(1, &object.handle);
+    // object.target = GL_TEXTURE_2D;
+
+    // node->setTextureObject(object);
+
+    auto object = node->getTextureObject();
+
+    std::cout << "object.target2: " << object.target << std::endl;
+    std::cout << "object.handle2: " << std::to_string(object.handle) << std::endl;
+
+    glBindTexture(object.target, object.handle);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    // glBindTexture(GL_TEXTURE_2D, 0);
 
     stbi_image_free(data);
+
+    counter++;
   }
 }
 
