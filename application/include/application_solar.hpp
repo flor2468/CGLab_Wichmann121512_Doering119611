@@ -60,6 +60,7 @@ class ApplicationSolar : public Application {
   void initializeStars();
   void drawStars();
   void initializeLight();
+  void drawLight();
   void initializeTexture();
 
  protected:
@@ -82,7 +83,7 @@ class ApplicationSolar : public Application {
   // camera projection matrix
   glm::fmat4 m_view_projection;
 
-  SceneGraph planetGraph_;
+  SceneGraph sceneGraph_;
 };
 
 #endif
