@@ -271,6 +271,8 @@ void ApplicationSolar::initializeLight() {
 
 void ApplicationSolar::initializePlanets() {
 
+  int counter = 0;
+
   // auto temp = glGetUniformLocation(m_shaders.at("planet").handle, "planet_Color");
 
   // over every node in the scenegraph should be iterated
@@ -356,13 +358,6 @@ void ApplicationSolar::initializePlanets() {
       node->setTextureImage("../../resources/textures/moonmap.jpg");
     
     }
-  }
-}
-
-
-void ApplicationSolar::initializeTexture() {
-
-  for (auto node : planetGraph_.getNodes()) {
 
     /** calling/ setting of uniform location */
     g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
@@ -373,9 +368,34 @@ void ApplicationSolar::initializeTexture() {
     /** calling/ setting of uniform location */
     g_locationTexturePlanet = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
     /** drawScene */
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0+counter);
     glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
     glUniform1i(g_locationTexturePlanet, 0);
+
+    counter++;
+
+  }
+}
+
+
+void ApplicationSolar::initializeTexture() {
+
+  int counter = 0;
+
+  for (auto node : planetGraph_.getNodes()) {
+
+    // /** calling/ setting of uniform location */
+    // g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
+    // /* information if textures should be drawn to shader */
+    // glUniform1i(g_locationTexture, g_texture);
+
+    // // Planets
+    // /** calling/ setting of uniform location */
+    // g_locationTexturePlanet = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
+    // /** drawScene */
+    // glActiveTexture(GL_TEXTURE0+counter);
+    // glBindTexture(GL_TEXTURE_2D, g_texturePlanet);
+    // glUniform1i(g_locationTexturePlanet, 0);
     
     /** creation of texture object - draw */
     int width, height, comp;
@@ -465,7 +485,7 @@ void ApplicationSolar::drawPlanets() {
   /** information if cel should be drawn to shader */
   glUniform1i(g_locationCel, g_cel);
 
-  initializeTexture();
+  // initializeTexture();
 
   // // TEXTURES ****************************************************************************
 
@@ -680,6 +700,7 @@ void ApplicationSolar::initializeGeometry() {
   //draw stars once
   initializeStars();
   drawStars();
+  initializeTexture();
 
 }
 
