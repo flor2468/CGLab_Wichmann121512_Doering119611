@@ -62,3 +62,20 @@ std::shared_ptr<CameraNode> SceneGraph::getCamera() {
 void SceneGraph::setCamera(std::shared_ptr<CameraNode> camera) {
     camera_ = camera;
 }
+
+std::list<std::pair<int, texture_object>> SceneGraph::getTextureObjects() {
+    return textureObjects_;
+}
+
+texture_object SceneGraph::getSingleTextureObject(int index) {
+    for (auto pair : textureObjects_) {
+        if (pair.first == index) {
+            return pair.second;
+        }
+    }
+}
+
+
+void SceneGraph::addTextureObjects(std::pair<int, texture_object> textureObject) {
+    textureObjects_.push_back(textureObject);
+}

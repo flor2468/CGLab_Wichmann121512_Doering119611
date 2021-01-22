@@ -18,17 +18,24 @@ public:
     std::string getName();
     std::shared_ptr<Node> getRoot();
     std::string printGraph();
+    
     void addNode(std::shared_ptr<Node> const& node);
     std::list<std::shared_ptr<Node>> getNodes();
+
     void addLightNode(std::shared_ptr<PointLightNode> const& lightNode);
     std::list<std::shared_ptr<PointLightNode>> getLightNodes();
+
     std::shared_ptr<CameraNode> getCamera();
     void setCamera(std::shared_ptr<CameraNode> camera);
 
+    std::list<std::pair<int, texture_object>> getTextureObjects();
+    void addTextureObjects(std::pair<int, texture_object> textureObject);
+    texture_object getSingleTextureObject(int index);
 
 protected:
     std::list<std::shared_ptr<Node>> nodes_;
     std::list<std::shared_ptr<PointLightNode>> lightNodes_;
+    std::list<std::pair<int, texture_object>> textureObjects_;
 
 private:
     void setName(std::string const& name);

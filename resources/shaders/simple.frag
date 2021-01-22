@@ -16,7 +16,7 @@ uniform vec3 camera;
 // boolean if cel shading of planets should be active
 uniform bool Cel;
 // boolean if texture of planets should be active
-uniform bool Texture;
+uniform bool Texture = true;
 
 vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be very bright)
 vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0); // 1.0 
@@ -26,8 +26,8 @@ vec4 colorResult;
 vec4 textureResult;
 
 // textures
-uniform sampler2D TexturePlanets;
-vec4 texel = texture(TexturePlanets, pass_TexCoord);
+uniform sampler2D TexturePlanet;
+vec4 textureOfPlanet = texture(TexturePlanet, pass_TexCoord);
 
 
 
@@ -60,7 +60,8 @@ void main() {
   vec3 specular_part = pow(max(dot(h, normal), 0), SHININESS) * LIGHT_SPECULAR;
 
   colorResult = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
-  // textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * texel.rgb + specular_part * light_Color, 1.0);
+  // textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * textureOfPlanet.rgb + specular_part * light_Color, 1.0);
+  textureResult = textureOfPlanet;
   
   // if case for the cel-shading
   if (Cel) {
@@ -83,9 +84,9 @@ void main() {
         //   out_Color = vec4(0.0, 0.0, 1.0, 1.0);
         // }
    // else for texture
-  // } else if (Texture) {   
-  //   out_Color = textureResult;
-  //   // else for "normal" light/ color
+  } else if (Texture) {   
+    out_Color = textureResult;
+    // else for "normal" light/ color
   } else {   
     out_Color = colorResult;
   }

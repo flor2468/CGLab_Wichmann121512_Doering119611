@@ -156,3 +156,12 @@ char* Node::getTextureImage() {
 void Node::setTextureImage(char* const& textureImage) {
     textureImage_ = textureImage;
 }
+
+
+void Node::setIndex(int const& index) {
+    index_ = index;
+}
+
+int Node::getIndex() {
+    return index_;
+}
