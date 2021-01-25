@@ -63,6 +63,8 @@ class ApplicationSolar : public Application {
   void initializeLight();
   void drawLight();
   void initializeTexture();
+  void initializeSkyBox();
+  void drawSkyBox();
 
  protected:
   void initializeShaderPrograms();

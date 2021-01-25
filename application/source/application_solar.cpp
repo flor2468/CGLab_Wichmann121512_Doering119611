@@ -120,11 +120,20 @@ void ApplicationSolar::drawPlanets() {
       // getting the textureObject of each planet
       texture_object textureObject = sceneGraph_.getSingleTextureObject(indexOfTexture);
 
+      std::cout << "\n" << std::endl;
+      std::cout << "index: " << indexOfTexture << std::endl;
+      std::cout << "name: " << node->getName() << std::endl;
+      std::cout << "target: " << textureObject.target << std::endl;
+      std::cout << "handle: " << textureObject.handle << std::endl;
+      std::cout << "\n" << std::endl;
+
       glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
       glBindTexture(textureObject.target, textureObject.handle);
 
       auto texture_location = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
+
+      glUseProgram(m_shaders.at("planet").handle);
 
       glUniform1i(texture_location, textureObject.handle);
 
@@ -179,6 +188,13 @@ void ApplicationSolar::drawStars()  {
   glBindVertexArray(star_object.vertex_AO);
 
   glDrawArrays(star_object.draw_mode, GLint(0), star_object.num_elements);
+
+}
+
+
+void ApplicationSolar::drawSkyBox() {
+
+
 
 }
 
@@ -638,6 +654,10 @@ void ApplicationSolar::initializeGeometry() {
   // second attribute is 3 floats with no offset & stride
   glVertexAttribPointer(1, model::NORMAL.components, model::NORMAL.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::NORMAL]);
 
+  glEnableVertexAttribArray(2);
+  // third attribute is 2 floats with no offset & stride
+  glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::TEXCOORD]);
+
    // generate generic buffer
   glGenBuffers(1, &planet_object.element_BO);
   // bind this as an vertex array buffer containing all attributes
@@ -649,6 +669,14 @@ void ApplicationSolar::initializeGeometry() {
   planet_object.draw_mode = GL_TRIANGLES;
   // transfer number of indices to model object 
   planet_object.num_elements = GLsizei(planet_model.indices.size());
+}
+
+
+void ApplicationSolar::initializeSkyBox() {
+
+
+
+
 }
 
 
