@@ -120,13 +120,6 @@ void ApplicationSolar::drawPlanets() {
       // getting the textureObject of each planet
       texture_object textureObject = sceneGraph_.getSingleTextureObject(indexOfTexture);
 
-      std::cout << "\n" << std::endl;
-      std::cout << "index: " << indexOfTexture << std::endl;
-      std::cout << "name: " << node->getName() << std::endl;
-      std::cout << "target: " << textureObject.target << std::endl;
-      std::cout << "handle: " << textureObject.handle << std::endl;
-      std::cout << "\n" << std::endl;
-
       glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
       glBindTexture(textureObject.target, textureObject.handle);
@@ -712,10 +705,6 @@ void ApplicationSolar::initializeTexture() {
     GLenum typeOfChannel = textureOfPlanet.channel_type;
 
     glActiveTexture(GL_TEXTURE0 + indexOfTexture);
-
-    // std::cout << "numOfTexture: " << numOfTexture << std::endl;
-    std::cout << "Index: " << indexOfTexture << std::endl;
-    std::cout << "GL_TEXTURE: " << GL_TEXTURE0 + indexOfTexture << std::endl;
 
     texture_object textureObject;
 
