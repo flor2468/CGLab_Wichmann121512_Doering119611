@@ -115,10 +115,12 @@ void ApplicationSolar::drawPlanets() {
       g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
       glUniform1i(g_locationTexture, g_texture);
 
-      // getting the textureObject of each planet
-      texture_object textureObject = sceneGraph_.getSingleTextureObject(node->getIndex());
+      int indexOfTexture = node->getIndex();
 
-      glActiveTexture(GL_TEXTURE1 + numOfTexture + 1);
+      // getting the textureObject of each planet
+      texture_object textureObject = sceneGraph_.getSingleTextureObject(indexOfTexture);
+
+      glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
       glBindTexture(textureObject.target, textureObject.handle);
 
@@ -446,7 +448,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({2.0f, 2.0f, 2.0f});
       node->setColor({1.0f, 1.0f, 0.0f});     
       // node->setTextureImage("../../resources/textures/sunmap.jpg");
-      node->setIndex(0);
+      node->setIndex(1);
 
     } else if (node->getName().compare("geometryMercury") == 0) {
 
@@ -455,7 +457,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -9.5f});
       node->setColor({0.5f, 0.4f, 0.4f});
       // node->setTextureImage("../../resources/textures/mercurymap.jpg");
-      node->setIndex(1);
+      node->setIndex(2);
     
      } else if (node->getName().compare("geometryVenus") == 0) {
 
@@ -464,7 +466,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -10.0f});
       node->setColor({0.9f, 0.5f, 0.0f});
       // node->setTextureImage("../../resources/textures/venusmap.jpg");
-      node->setIndex(2);
+      node->setIndex(3);
 
     } else if (node->getName().compare("geometryEarth") == 0) {
 
@@ -473,7 +475,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.3f, 0.7f, 0.0f});
       // node->setTextureImage("../../resources/textures/earthmap.jpg");
-      node->setIndex(3);
+      node->setIndex(4);
 
     } else if (node->getName().compare("geometryMars") == 0) {
 
@@ -482,7 +484,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -13.0f});
       node->setColor({0.8f, 0.0f, 0.1f});
       // node->setTextureImage("../../resources/textures/marsmap.jpg");
-      node->setIndex(5);
+      node->setIndex(6);
 
     } else if (node->getName().compare("geometryJupiter") == 0) {
 
@@ -491,7 +493,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -14.0f});
       node->setColor({0.7f, 0.7f, 0.6f});
       // node->setTextureImage("../../resources/textures/jupitermap.jpg");
-      node->setIndex(6);
+      node->setIndex(7);
 
     } else if (node->getName().compare("geometrySaturn") == 0) {
 
@@ -500,7 +502,15 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -15.0f});
       node->setColor({0.9f, 0.8f, 0.4f});
       // node->setTextureImage("../../resources/textures/saturnmap.jpg");
-      node->setIndex(7);
+      node->setIndex(8);
+
+    } else if (node->getName().compare("geometryUranus") == 0) {
+
+      node->setSpeed(0.5f);
+      node->setSize({0.8f, 0.8f, 0.8f});
+      node->setPosition({0.0f, 0.0f, -15.5f});
+      node->setColor({0.0f, 1.0f, 0.0f});
+      node->setIndex(9);
 
     } else if (node->getName().compare("geometryNeptun") == 0) {
 
@@ -509,8 +519,8 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -16.0f});
       node->setColor({0.0f, 0.4f, 1.0f});
       // node->setTextureImage("../../resources/textures/neptunemap.jpg");
-      node->setIndex(8);
-      ;
+      node->setIndex(10);
+      
     } else if (node->getName().compare("geometryPluto") == 0) {
 
       node->setSpeed(0.3f);
@@ -518,7 +528,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -70.0f});
       node->setColor({0.4f, 0.3f, 0.0f});
       // node->setTextureImage("../../resources/textures/plutomap.jpg");
-      node->setIndex(9);
+      node->setIndex(11);
 
     } else if (node->getName().compare("geometryMoon") == 0) {
 
@@ -527,7 +537,7 @@ void ApplicationSolar::initializePlanets() {
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.5f, 0.5f, 0.5f});
       // node->setTextureImage("../../resources/textures/moonmap.jpg");
-      node->setIndex(4);
+      node->setIndex(5);
     
     }
   }
@@ -653,7 +663,18 @@ void ApplicationSolar::initializeTexture() {
 
     std::cout << node->getName() << std::endl;
 
-    textureOfPlanet = texture_loader::file(m_resource_path + "textures/" + node->getName() + ".png");
+    int indexOfTexture = node->getIndex();
+
+    try {
+
+      textureOfPlanet = texture_loader::file(m_resource_path + "textures/" + node->getName() + ".png");
+    }
+
+    catch (std::exception exception) {
+
+      std::cout << "Could not load the texture of " + node->getName() + "\n" + exception.what() << std::endl;
+
+    }
 
     // like in the texture_loader.cpp we need width and height & like in pixel_data.hpp we need channels and channel_type
 
@@ -662,7 +683,11 @@ void ApplicationSolar::initializeTexture() {
     GLenum numOfChannel = textureOfPlanet.channels;
     GLenum typeOfChannel = textureOfPlanet.channel_type;
 
-    glActiveTexture(GL_TEXTURE1 + numOfTexture + 1);
+    glActiveTexture(GL_TEXTURE0 + indexOfTexture);
+
+    // std::cout << "numOfTexture: " << numOfTexture << std::endl;
+    std::cout << "Index: " << indexOfTexture << std::endl;
+    std::cout << "GL_TEXTURE: " << GL_TEXTURE0 + indexOfTexture << std::endl;
 
     texture_object textureObject;
 
@@ -670,15 +695,13 @@ void ApplicationSolar::initializeTexture() {
 
     textureObject.target = GL_TEXTURE_2D;
 
-    int indexOfTexture = node->getIndex();
-
     // adding each textureObject to the list, where they can be found by its index
     sceneGraph_.addTextureObjects({indexOfTexture, textureObject});
 
     glBindTexture(textureObject.target, textureObject.handle);
 
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
