@@ -1,4 +1,5 @@
 #version 150
+//#extension GL_OES_standard_derivatives : enable
 
 in vec3 pass_Normal;
 in vec3 pass_Vertex_Pos;
@@ -28,11 +29,28 @@ vec4 textureResult;
 // textures
 uniform sampler2D TexturePlanet;
 
+/*
+vec3 perturbNormal( vec3 vertex_pos, vec3 surf_norm ) {
+  vec3 q0 = dFdx( eye_vert_pos.xyz );
+  vec3 q1 = dFdy( eye_vert_pos.xyz );
+  vec2 st0 = dFdx( uv.st );
+  vec2 st1 = dFdy( uv.st );
+  float normalScale = 0.5f;
+
+  vec3 S = normalize( q0 * st1.t - q1 * st0.t );
+  vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
+  vec3 N = normalize( surf_norm );
+  vec3 mapN = texture2D( normalMap, uv ).xyz * 2.0 - 1.0;
+  // normalScale controls the intensity of the normals
+  mapN.xy = normalScale * mapN.xy;
+  mat3 tsn = mat3( S, T, N );
+  return normalize( tsn * mapN );
+}
+*/
 
 void main() {
-  //out_Color = vec4(abs(normalize(pass_Normal)), 1.0);
-  //out_Color = vec4(planet_Color, 1.0);
 
+  // texture of planets
   vec4 textureOfPlanet = texture(TexturePlanet, pass_TexCoord);
 
   // calculating the normal

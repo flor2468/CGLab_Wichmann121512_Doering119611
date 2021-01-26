@@ -31,6 +31,7 @@ public:
     std::list<std::pair<int, texture_object>> getTextureObjects();
     void addTextureObjects(std::pair<int, texture_object> textureObject);
     texture_object getSingleTextureObject(int index);
+    int getSize();
 
 protected:
     std::list<std::shared_ptr<Node>> nodes_;
@@ -44,6 +45,7 @@ private:
     std::string name_;
     std::shared_ptr<Node> root_;
     std::shared_ptr<CameraNode> camera_;
+    int size_;
 
 };
 

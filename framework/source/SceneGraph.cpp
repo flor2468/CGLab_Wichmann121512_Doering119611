@@ -39,6 +39,7 @@ std::string SceneGraph::printGraph() {
 // function for adding a node to the "nodes_"-list
 void SceneGraph::addNode(std::shared_ptr<Node> const& node) {
     nodes_.push_back(node);
+    size_++;
 }
 
 // getter for the nodes_
@@ -78,4 +79,8 @@ texture_object SceneGraph::getSingleTextureObject(int index) {
 
 void SceneGraph::addTextureObjects(std::pair<int, texture_object> textureObject) {
     textureObjects_.push_back(textureObject);
+}
+
+int SceneGraph::getSize() {
+    return size_;
 }

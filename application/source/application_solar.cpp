@@ -9,10 +9,6 @@ static GLuint g_locationCel;
 // boolen if cel is active
 GLboolean g_cel = GL_FALSE;
 
-/** sun texture */
-static GLuint g_texturePlanet;
-/** location of uniform-variable "TexturePlanet" */
-static GLuint g_locationTexturePlanet;
 /** location of uniform-variable "Texture" */
 static GLuint g_locationTexture;
 /** boolean if texture is active */
@@ -109,16 +105,18 @@ void ApplicationSolar::drawPlanets() {
 
       /** SET TEXTURES **/
 
-      // --> TODO <--
-
       // enables the function that with pressing "T" the textures are visible or the colors
       g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
       glUniform1i(g_locationTexture, g_texture);
 
       int indexOfTexture = node->getIndex();
+      int indexOfNormal = node->getNormalIndex();
 
       // getting the textureObject of each planet
       texture_object textureObject = sceneGraph_.getSingleTextureObject(indexOfTexture);
+
+      // getting the normalObject of each planet
+      texture_object normalObject = sceneGraph_.getSingleTextureObject(indexOfNormal);
 
       glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
@@ -259,7 +257,6 @@ void ApplicationSolar::makeSolarSystem() {
   std::shared_ptr<PointLightNode> lightPointer = std::make_shared<PointLightNode>(light);
 
   lightPointer->setColor({1.0f, 1.0f, 0.7f});
-  // std::cout << "set lightcolor" << glm::to_string(lightPointer->getColor()) << std::endl;
 
   root.addChildren(lightPointer);
 
@@ -456,7 +453,6 @@ void ApplicationSolar::initializePlanets() {
 
       node->setSize({2.0f, 2.0f, 2.0f});
       node->setColor({1.0f, 1.0f, 0.0f});     
-      // node->setTextureImage("../../resources/textures/sunmap.jpg");
       node->setIndex(1);
 
     } else if (node->getName().compare("geometryMercury") == 0) {
@@ -465,7 +461,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.3f, 0.3f, 0.3f});
       node->setPosition({0.0f, 0.0f, -9.5f});
       node->setColor({0.5f, 0.4f, 0.4f});
-      // node->setTextureImage("../../resources/textures/mercurymap.jpg");
       node->setIndex(2);
     
      } else if (node->getName().compare("geometryVenus") == 0) {
@@ -474,7 +469,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.5f, 0.5f, 0.5f});
       node->setPosition({0.0f, 0.0f, -10.0f});
       node->setColor({0.9f, 0.5f, 0.0f});
-      // node->setTextureImage("../../resources/textures/venusmap.jpg");
       node->setIndex(3);
 
     } else if (node->getName().compare("geometryEarth") == 0) {
@@ -483,7 +477,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.5f, 0.5f, 0.5f});
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.3f, 0.7f, 0.0f});
-      // node->setTextureImage("../../resources/textures/earthmap.jpg");
       node->setIndex(4);
 
     } else if (node->getName().compare("geometryMars") == 0) {
@@ -492,7 +485,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.4f, 0.4f, 0.4f});
       node->setPosition({0.0f, 0.0f, -13.0f});
       node->setColor({0.8f, 0.0f, 0.1f});
-      // node->setTextureImage("../../resources/textures/marsmap.jpg");
       node->setIndex(6);
 
     } else if (node->getName().compare("geometryJupiter") == 0) {
@@ -501,7 +493,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({1.3f, 1.3f, 1.3f});
       node->setPosition({0.0f, 0.0f, -14.0f});
       node->setColor({0.7f, 0.7f, 0.6f});
-      // node->setTextureImage("../../resources/textures/jupitermap.jpg");
       node->setIndex(7);
 
     } else if (node->getName().compare("geometrySaturn") == 0) {
@@ -510,7 +501,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.9f, 0.9f, 0.9f});
       node->setPosition({0.0f, 0.0f, -15.0f});
       node->setColor({0.9f, 0.8f, 0.4f});
-      // node->setTextureImage("../../resources/textures/saturnmap.jpg");
       node->setIndex(8);
 
     } else if (node->getName().compare("geometryUranus") == 0) {
@@ -527,7 +517,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.75f, 0.75f, 0.75f});
       node->setPosition({0.0f, 0.0f, -16.0f});
       node->setColor({0.0f, 0.4f, 1.0f});
-      // node->setTextureImage("../../resources/textures/neptunemap.jpg");
       node->setIndex(10);
       
     } else if (node->getName().compare("geometryPluto") == 0) {
@@ -536,7 +525,6 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.3f, 0.3f, 0.3f});
       node->setPosition({0.0f, 0.0f, -70.0f});
       node->setColor({0.4f, 0.3f, 0.0f});
-      // node->setTextureImage("../../resources/textures/plutomap.jpg");
       node->setIndex(11);
 
     } else if (node->getName().compare("geometryMoon") == 0) {
@@ -545,10 +533,10 @@ void ApplicationSolar::initializePlanets() {
       node->setSize({0.2f, 0.2f, 0.2f});
       node->setPosition({0.0f, 0.0f, -11.5f});
       node->setColor({0.5f, 0.5f, 0.5f});
-      // node->setTextureImage("../../resources/textures/moonmap.jpg");
       node->setIndex(5);
     
     }
+    node->setNormalIndex(sceneGraph_.getSize() + node->getIndex());
   }
 }
 
@@ -681,8 +669,6 @@ void ApplicationSolar::initializeTexture() {
   pixel_data textureOfPlanet;
 
   for (auto node : sceneGraph_.getNodes()) {
-
-    std::cout << node->getName() << std::endl;
 
     int indexOfTexture = node->getIndex();
 

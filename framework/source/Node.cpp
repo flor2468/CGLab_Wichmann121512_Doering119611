@@ -149,14 +149,6 @@ glm::fvec3 Node::getColor() {
     return color_;
 }
 
-char* Node::getTextureImage() {
-    return textureImage_;
-}
-
-void Node::setTextureImage(char* const& textureImage) {
-    textureImage_ = textureImage;
-}
-
 
 void Node::setIndex(int const& index) {
     index_ = index;
@@ -164,4 +156,12 @@ void Node::setIndex(int const& index) {
 
 int Node::getIndex() {
     return index_;
+}
+
+void Node::setNormalIndex(int const& index) {
+    normal_index_ = index;
+}
+
+int Node::getNormalIndex() {
+    return normal_index_;
 }

@@ -51,10 +51,10 @@ public:
     void setRotMat(glm::fmat4 const& rotMat);
     void setColor(glm::vec3 const& color);
     glm::fvec3 getColor();
-    char* getTextureImage();
-    void setTextureImage(char* const& textureImage);
     int getIndex();
     void setIndex(int const& index);
+    void setNormalIndex(int const& index);
+    int getNormalIndex();
 
 protected:
     model_object meshObject_;
@@ -75,7 +75,7 @@ private:
     glm::fvec3 color_;
     char* textureImage_;
     int index_;
-
+    int normal_index_;
 };
 
 #endif
