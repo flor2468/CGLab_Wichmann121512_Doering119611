@@ -36,36 +36,46 @@ uniform sampler2D TexturePlanet;
 uniform sampler2D NormalTexturePlanet;
 
 
-
-  
- 
-
-
 void main() {
 
-  // texture of planets
+  // get diffuse color of the textures of the planets
   vec4 textureOfPlanet = texture(TexturePlanet, pass_TexCoord);
 
+  // get diffuse color of the normal-textures of the planets
   vec4 NormalTextureOfPlanet = texture(NormalTexturePlanet, pass_NormTexCoord);
 
   // calculating the normal
   vec3 normal = normalize(pass_Normal);
 
+  // calculating normal mapping --------------------------------------------------------------------
   vec3 q0 = dFdx(pass_Vertex_Pos.xyz);
   vec3 q1 = dFdy(pass_Vertex_Pos.xyz);
   vec2 st0 = dFdx(pass_NormTexCoord.st);
   vec2 st1 = dFdy(pass_NormTexCoord.st);
+
+  // define the intensity of the normals
   float normalScale = 0.5f;
 
+  // calculating the tangents
   vec3 S = normalize(q0 * st1.t - q1 * st0.t);
+
+  // calculating the bitangents
   vec3 T = normalize(-q0 * st1.s + q1 * st0.s);
+
+  // getting the normal
   vec3 N = normalize(normal);
+
+  // calculating the normalized normal-texture
   vec3 mapN = NormalTextureOfPlanet.xyz * 2.0 - 1.0;
-  // normalScale controls the intensity of the normals
+
+  // calculating the normalized normal-texture by multiplying with the corresponding intensity
   mapN.xy = normalScale * mapN.xy;
   mat3 tsn = mat3(S, T, N);
 
+  // normalize again
   normal = normalize(tsn * mapN);
+
+  // calculating colors of the planets --------------------------------------------------------------
 
   // calculating l vector
   // pos of light - pos of vertex
@@ -87,6 +97,8 @@ void main() {
 
   // specular light
   vec3 specular_part = pow(max(dot(h, normal), 0), SHININESS) * LIGHT_SPECULAR;
+
+  // results ------------------------------------------------------------------------------------------------------------------
 
   colorResult = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
   textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * textureOfPlanet.rgb + specular_part * light_Color, 1.0);

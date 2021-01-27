@@ -117,10 +117,12 @@ void ApplicationSolar::drawPlanets() {
       // getting the textureObject of each planet
       texture_object textureObject = sceneGraph_.getSingleTextureObject(indexOfTexture);
 
+      // binding the textures for accessing
       glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
       glBindTexture(textureObject.target, textureObject.handle);
 
+      // upload the texture unit data to the shader
       auto texture_location = glGetUniformLocation(m_shaders.at("planet").handle, "TexturePlanet");
 
       glUseProgram(m_shaders.at("planet").handle);
@@ -133,15 +135,18 @@ void ApplicationSolar::drawPlanets() {
       g_locationNormalTexture = glGetUniformLocation(m_shaders.at("planet").handle, "NormalTexture");
       glUniform1i(g_locationNormalTexture, g_normal_texture);
 
+      // getting the index of the normal-textures
       int indexOfNormal = node->getNormalIndex();
 
       // getting the normalObject of each planet
       texture_object normalObject = sceneGraph_.getSingleNormalTextureObject(indexOfNormal);
 
+      // binding the textures for accessing
       glActiveTexture(GL_TEXTURE0 + indexOfNormal);
 
       glBindTexture(normalObject.target, normalObject.handle);
 
+      // upload the texture unit data to the shader
       auto normal_texture_location = glGetUniformLocation(m_shaders.at("planet").handle, "NormalTexturePlanet");
 
       glUseProgram(m_shaders.at("planet").handle);
@@ -687,13 +692,18 @@ void ApplicationSolar::initializeSkyBox() {
 
 void ApplicationSolar::initializeTexture() {
 
+  // getting pixel data for the textures and the normal-textures
   pixel_data textureOfPlanet;
   pixel_data normalOfPlanet;
 
+  // for loop for the textures **************************************************************************************************
+
   for (auto node : sceneGraph_.getNodes()) {
 
+    // getting the index of the texture for each node
     int indexOfTexture = node->getIndex();
 
+    // loading the texture images -> if not possible through an exception
     try {
 
       textureOfPlanet = texture_loader::file(m_resource_path + "textures/" + node->getName() + ".png");
@@ -707,11 +717,17 @@ void ApplicationSolar::initializeTexture() {
 
     // like in the texture_loader.cpp we need width and height & like in pixel_data.hpp we need channels and channel_type
 
+    // width & height are the dimensions of the image (valid for 2D)
     GLsizei width = (GLsizei)textureOfPlanet.width;
     GLsizei height = (GLsizei)textureOfPlanet.height;
+
+    // (internal) format of the texture/ texel data
     GLenum numOfChannel = textureOfPlanet.channels;
+
+    // data type of the texel data
     GLenum typeOfChannel = textureOfPlanet.channel_type;
 
+    // initialise texture
     glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
     texture_object textureObject;
@@ -725,22 +741,26 @@ void ApplicationSolar::initializeTexture() {
 
     glBindTexture(textureObject.target, textureObject.handle);
 
+    // define the texture sampling parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // define the texture data and its format
     glTexImage2D(GL_TEXTURE_2D, 0, numOfChannel, width, height, 0, numOfChannel, typeOfChannel, textureOfPlanet.ptr());
 
   }
 
-  // for normal mapping *************************************************************************************************
+  // for loop for the normal-textures ******************************************************************************************
 
   for (auto node : sceneGraph_.getNodes()) {
 
+    // getting the index of the normal-texture for each node
     int indexOfNormal = node->getNormalIndex();
 
+    // loading the normal-texture images -> if not possible through an exception
     try {
 
       normalOfPlanet = texture_loader::file(m_resource_path + "textures/" + node->getName() + "_normalmap.png");
@@ -754,11 +774,17 @@ void ApplicationSolar::initializeTexture() {
 
     // like in the texture_loader.cpp we need width and height & like in pixel_data.hpp we need channels and channel_type
 
+    // width & height are the dimensions of the image (valid for 2D)
     GLsizei n_width = (GLsizei)normalOfPlanet.width;
     GLsizei n_height = (GLsizei)normalOfPlanet.height;
+
+    // (internal) format of the texture/ texel data
     GLenum n_numOfChannel = normalOfPlanet.channels;
+
+    // data type of the texel data
     GLenum n_typeOfChannel = normalOfPlanet.channel_type;
 
+    // initialise texture
     glActiveTexture(GL_TEXTURE0 + indexOfNormal);
 
     texture_object normalObject;
@@ -772,12 +798,14 @@ void ApplicationSolar::initializeTexture() {
 
     glBindTexture(normalObject.target, normalObject.handle);
 
+    // define the texture sampling parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // define the texture data and its format
     glTexImage2D(GL_TEXTURE_2D, 0, n_numOfChannel, n_width, n_height, 0, n_numOfChannel, n_typeOfChannel, normalOfPlanet.ptr());
   }
 }
