@@ -44,6 +44,8 @@ class ApplicationSolar : public Application {
   ~ApplicationSolar();
   //activates/ deactivates the drawing of the planet outlines
   void toggleCel();
+  void toggleTexture();
+  void toggleNormalTexture();
   // react to key input
   void keyCallback(int key, int action, int mods);
   //handle delta mouse movement input

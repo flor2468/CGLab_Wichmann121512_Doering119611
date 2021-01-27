@@ -84,3 +84,25 @@ void SceneGraph::addTextureObjects(std::pair<int, texture_object> textureObject)
 int SceneGraph::getSize() {
     return size_;
 }
+
+void SceneGraph::setSize(int size) {
+    size_ = size;
+}
+
+
+std::list<std::pair<int, texture_object>> SceneGraph::getNormalTextureObjects() {
+    return normalTextureObjects_;
+}
+
+texture_object SceneGraph::getSingleNormalTextureObject(int index) {
+    for (auto pair : normalTextureObjects_) {
+        if (pair.first == index) {
+            return pair.second;
+        }
+    }
+}
+
+
+void SceneGraph::addNormalTextureObjects(std::pair<int, texture_object> textureObject) {
+    normalTextureObjects_.push_back(textureObject);
+}

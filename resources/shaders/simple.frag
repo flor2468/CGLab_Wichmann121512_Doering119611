@@ -1,11 +1,12 @@
 #version 150
-//#extension GL_OES_standard_derivatives : enable
+#extension GL_OES_standard_derivatives : enable
 
 in vec3 pass_Normal;
 in vec3 pass_Vertex_Pos;
 in vec3 pass_Camera_Pos;
 in mat4 pass_ViewMatrix;
 in vec2 pass_TexCoord;
+in vec2 pass_NormTexCoord;
 
 out vec4 out_Color;
 
@@ -19,42 +20,52 @@ uniform bool Cel;
 // boolean if texture of planets should be active
 uniform bool Texture;
 
+uniform bool NormalTexture;
+
 vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be very bright)
 vec3 LIGHT_DIFFUSE = vec3(1.0, 1.0, 1.0); // 1.0 
 vec3 LIGHT_SPECULAR = vec3(1.0, 1.0, 1.0); // 1.0
 float SHININESS = 20.0f;
 vec4 colorResult;
 vec4 textureResult;
+vec4 normalTextureResult;
 
 // textures
 uniform sampler2D TexturePlanet;
 
-/*
-vec3 perturbNormal( vec3 vertex_pos, vec3 surf_norm ) {
-  vec3 q0 = dFdx( eye_vert_pos.xyz );
-  vec3 q1 = dFdy( eye_vert_pos.xyz );
-  vec2 st0 = dFdx( uv.st );
-  vec2 st1 = dFdy( uv.st );
-  float normalScale = 0.5f;
+uniform sampler2D NormalTexturePlanet;
 
-  vec3 S = normalize( q0 * st1.t - q1 * st0.t );
-  vec3 T = normalize( -q0 * st1.s + q1 * st0.s );
-  vec3 N = normalize( surf_norm );
-  vec3 mapN = texture2D( normalMap, uv ).xyz * 2.0 - 1.0;
-  // normalScale controls the intensity of the normals
-  mapN.xy = normalScale * mapN.xy;
-  mat3 tsn = mat3( S, T, N );
-  return normalize( tsn * mapN );
-}
-*/
+
+
+  
+ 
+
 
 void main() {
 
   // texture of planets
   vec4 textureOfPlanet = texture(TexturePlanet, pass_TexCoord);
 
+  vec4 NormalTextureOfPlanet = texture(NormalTexturePlanet, pass_NormTexCoord);
+
   // calculating the normal
   vec3 normal = normalize(pass_Normal);
+
+  vec3 q0 = dFdx(pass_Vertex_Pos.xyz);
+  vec3 q1 = dFdy(pass_Vertex_Pos.xyz);
+  vec2 st0 = dFdx(pass_NormTexCoord.st);
+  vec2 st1 = dFdy(pass_NormTexCoord.st);
+  float normalScale = 0.5f;
+
+  vec3 S = normalize(q0 * st1.t - q1 * st0.t);
+  vec3 T = normalize(-q0 * st1.s + q1 * st0.s);
+  vec3 N = normalize(normal);
+  vec3 mapN = NormalTextureOfPlanet.xyz * 2.0 - 1.0;
+  // normalScale controls the intensity of the normals
+  mapN.xy = normalScale * mapN.xy;
+  mat3 tsn = mat3(S, T, N);
+
+  normal = normalize(tsn * mapN);
 
   // calculating l vector
   // pos of light - pos of vertex
@@ -80,6 +91,7 @@ void main() {
   colorResult = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
   textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * textureOfPlanet.rgb + specular_part * light_Color, 1.0);
   // textureResult = textureOfPlanet;
+  normalTextureResult = vec4((LIGHT_AMBIENT + diffuse_part) * NormalTextureOfPlanet.rgb + specular_part * light_Color, 1.0);
   
   // if case for the cel-shading
   if (Cel) {
@@ -104,6 +116,8 @@ void main() {
    // else for texture
   } else if (Texture) {   
     out_Color = textureResult;
+  } else if (NormalTexture) {
+    out_Color = normalTextureResult;
     // else for "normal" light/ color
   } else {   
     out_Color = colorResult;

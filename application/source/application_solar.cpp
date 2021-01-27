@@ -14,6 +14,10 @@ static GLuint g_locationTexture;
 /** boolean if texture is active */
 GLboolean g_texture = GL_TRUE;
 
+static GLuint g_locationNormalTexture;
+
+GLboolean g_normal_texture = GL_FALSE;
+
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
@@ -58,10 +62,6 @@ void ApplicationSolar::drawPlanets() {
   std::advance(it, 3);
   earth = *it;
 
-  // variables for the textures
-  int numOfTexture = 0;
-  auto textures = sceneGraph_.getTextureObjects();
-
   // over every node in the scenegraph should be iterated
   for (std::shared_ptr<Node> node : sceneGraph_.getNodes()) {
     
@@ -105,18 +105,17 @@ void ApplicationSolar::drawPlanets() {
 
       /** SET TEXTURES **/
 
+      // for texturing *************************************************************************************************
+
       // enables the function that with pressing "T" the textures are visible or the colors
       g_locationTexture = glGetUniformLocation(m_shaders.at("planet").handle, "Texture");
       glUniform1i(g_locationTexture, g_texture);
 
+      // getting the index of the textures
       int indexOfTexture = node->getIndex();
-      int indexOfNormal = node->getNormalIndex();
 
       // getting the textureObject of each planet
       texture_object textureObject = sceneGraph_.getSingleTextureObject(indexOfTexture);
-
-      // getting the normalObject of each planet
-      texture_object normalObject = sceneGraph_.getSingleTextureObject(indexOfNormal);
 
       glActiveTexture(GL_TEXTURE0 + indexOfTexture);
 
@@ -128,7 +127,26 @@ void ApplicationSolar::drawPlanets() {
 
       glUniform1i(texture_location, textureObject.handle);
 
-      numOfTexture++;
+      // for normal mapping *************************************************************************************************
+
+      // enables the function that with pressing "M" the normal textures are visible or the colors
+      g_locationNormalTexture = glGetUniformLocation(m_shaders.at("planet").handle, "NormalTexture");
+      glUniform1i(g_locationNormalTexture, g_normal_texture);
+
+      int indexOfNormal = node->getNormalIndex();
+
+      // getting the normalObject of each planet
+      texture_object normalObject = sceneGraph_.getSingleNormalTextureObject(indexOfNormal);
+
+      glActiveTexture(GL_TEXTURE0 + indexOfNormal);
+
+      glBindTexture(normalObject.target, normalObject.handle);
+
+      auto normal_texture_location = glGetUniformLocation(m_shaders.at("planet").handle, "NormalTexturePlanet");
+
+      glUseProgram(m_shaders.at("planet").handle);
+
+      glUniform1i(normal_texture_location, normalObject.handle);
 
       /** CEL SHADING **/
 
@@ -435,6 +453,7 @@ void ApplicationSolar::makeSolarSystem() {
   sceneGraph_.addNode(geometryUranusPointer);
   sceneGraph_.addNode(geometryNeptunPointer);
   sceneGraph_.addNode(geometryPlutoPointer);
+  sceneGraph_.setSize(sceneGraph_.getNodes().size());
 
 }
 
@@ -508,7 +527,7 @@ void ApplicationSolar::initializePlanets() {
       node->setSpeed(0.5f);
       node->setSize({0.8f, 0.8f, 0.8f});
       node->setPosition({0.0f, 0.0f, -15.5f});
-      node->setColor({0.0f, 1.0f, 0.0f});
+      node->setColor({0.7f, 0.0f, 0.5f});
       node->setIndex(9);
 
     } else if (node->getName().compare("geometryNeptun") == 0) {
@@ -551,6 +570,7 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("planet").u_locs["ViewMatrix"] = -1;
   m_shaders.at("planet").u_locs["ProjectionMatrix"] = -1;
   m_shaders.at("planet").u_locs["TexturePlanet"] = -1;
+  m_shaders.at("planet").u_locs["NormalTexturePlanet"] = -1;
 
   // creating shader program for "star"
   m_shaders.emplace("star", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/vao.vert"},
@@ -639,6 +659,10 @@ void ApplicationSolar::initializeGeometry() {
   // third attribute is 2 floats with no offset & stride
   glVertexAttribPointer(2, model::TEXCOORD.components, model::TEXCOORD.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::TEXCOORD]);
 
+  glEnableVertexAttribArray(3);
+  // third attribute is 2 floats with no offset & stride
+  glVertexAttribPointer(3, model::TEXCOORD.components, model::TEXCOORD.type, GL_FALSE, planet_model.vertex_bytes, planet_model.offsets[model::TEXCOORD]);
+
    // generate generic buffer
   glGenBuffers(1, &planet_object.element_BO);
   // bind this as an vertex array buffer containing all attributes
@@ -663,10 +687,8 @@ void ApplicationSolar::initializeSkyBox() {
 
 void ApplicationSolar::initializeTexture() {
 
-  // --> TODO <--
-
-  int numOfTexture = 0;
   pixel_data textureOfPlanet;
+  pixel_data normalOfPlanet;
 
   for (auto node : sceneGraph_.getNodes()) {
 
@@ -711,9 +733,52 @@ void ApplicationSolar::initializeTexture() {
 
     glTexImage2D(GL_TEXTURE_2D, 0, numOfChannel, width, height, 0, numOfChannel, typeOfChannel, textureOfPlanet.ptr());
 
-    // glGenerateMipmap(GL_TEXTURE_2D);
+  }
 
-    numOfTexture++;
+  // for normal mapping *************************************************************************************************
+
+  for (auto node : sceneGraph_.getNodes()) {
+
+    int indexOfNormal = node->getNormalIndex();
+
+    try {
+
+      normalOfPlanet = texture_loader::file(m_resource_path + "textures/" + node->getName() + "_normalmap.png");
+    }
+
+    catch (std::exception exception) {
+
+      std::cout << "Could not load the normalmap of " + node->getName() + "\n" + exception.what() << std::endl;
+
+    }
+
+    // like in the texture_loader.cpp we need width and height & like in pixel_data.hpp we need channels and channel_type
+
+    GLsizei n_width = (GLsizei)normalOfPlanet.width;
+    GLsizei n_height = (GLsizei)normalOfPlanet.height;
+    GLenum n_numOfChannel = normalOfPlanet.channels;
+    GLenum n_typeOfChannel = normalOfPlanet.channel_type;
+
+    glActiveTexture(GL_TEXTURE0 + indexOfNormal);
+
+    texture_object normalObject;
+
+    glGenTextures(1, &normalObject.handle);
+
+    normalObject.target = GL_TEXTURE_2D;
+
+    // adding each textureObject to the list, where they can be found by its index
+    sceneGraph_.addNormalTextureObjects({indexOfNormal, normalObject});
+
+    glBindTexture(normalObject.target, normalObject.handle);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, n_numOfChannel, n_width, n_height, 0, n_numOfChannel, n_typeOfChannel, normalOfPlanet.ptr());
   }
 }
 
@@ -722,8 +787,14 @@ void ApplicationSolar::initializeTexture() {
 
 
 // (de)activates the texture mode
-void toggleTexture () {
+void ApplicationSolar::toggleTexture () {
     g_texture = !g_texture;
+}
+
+
+// (de)activates the normal texture mode
+void ApplicationSolar::toggleNormalTexture () {
+    g_normal_texture = !g_normal_texture;
 }
 
 
@@ -768,6 +839,10 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 
   if (key == GLFW_KEY_T && action == GLFW_PRESS) {
     toggleTexture();
+  }
+
+  if (key == GLFW_KEY_M && action == GLFW_PRESS) {
+    toggleNormalTexture();
   }
 
   // actualize the shaders and also view matrix of "planet" and "star"

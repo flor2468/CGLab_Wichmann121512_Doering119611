@@ -31,12 +31,19 @@ public:
     std::list<std::pair<int, texture_object>> getTextureObjects();
     void addTextureObjects(std::pair<int, texture_object> textureObject);
     texture_object getSingleTextureObject(int index);
+
+    std::list<std::pair<int, texture_object>> getNormalTextureObjects();
+    void addNormalTextureObjects(std::pair<int, texture_object> textureObject);
+    texture_object getSingleNormalTextureObject(int index);
+
+    void setSize(int size);
     int getSize();
 
 protected:
     std::list<std::shared_ptr<Node>> nodes_;
     std::list<std::shared_ptr<PointLightNode>> lightNodes_;
     std::list<std::pair<int, texture_object>> textureObjects_;
+    std::list<std::pair<int, texture_object>> normalTextureObjects_;
 
 private:
     void setName(std::string const& name);
