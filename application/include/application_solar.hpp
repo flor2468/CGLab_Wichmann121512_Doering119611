@@ -46,6 +46,10 @@ class ApplicationSolar : public Application {
   void toggleCel();
   void toggleTexture();
   void toggleNormalTexture();
+  void toggleGrayscale();
+  void toggleHorizontalMirroring();
+  void toggleVerticalMirroring();
+  void toggleBlur();
   // react to key input
   void keyCallback(int key, int action, int mods);
   //handle delta mouse movement input

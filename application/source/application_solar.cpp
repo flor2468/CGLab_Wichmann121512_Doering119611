@@ -19,6 +19,12 @@ static GLuint g_locationNormalTexture;
 GLboolean g_normal_texture = GL_FALSE;
 
 
+GLboolean g_grayscale = GL_FALSE;
+GLboolean g_horizontalMirroring = GL_FALSE;
+GLboolean g_verticalMirroring = GL_FALSE;
+GLboolean g_blur = GL_FALSE;
+
+
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
  :Application{resource_path}
  ,planet_object{}, star_object{}
@@ -283,9 +289,13 @@ void ApplicationSolar::uploadUniforms() {
   uploadProjection("star");
 
   glUseProgram(m_shaders.at("fullScreenQuad").handle);
-  // uploadView("fullScreenQuad");
-  // uploadProjection("fullScreenQuad");
 
+  // part for the ScreenQuad
+
+  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("horMir"), g_horizontalMirroring);
+  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("verMir"), g_verticalMirroring);
+  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("grayscale"), g_grayscale);
+  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("blur"), g_blur);
 }
 
 
@@ -340,7 +350,7 @@ void ApplicationSolar::initializeFramebuffer(int width, int height) {
   }
 
   else {
-    std::cout << "Writing framebuffer successfull." << std::endl;
+    std::cout << "\n Writing framebuffer successfull." << std::endl;
   }
 }
 
@@ -734,7 +744,10 @@ void ApplicationSolar::initializeShaderPrograms() {
                                                    {GL_FRAGMENT_SHADER, m_resource_path + "shaders/screenQuad.frag"}}});
 
   m_shaders.at("fullScreenQuad").u_locs["TextureScreenQuad"] = -1;
-
+  m_shaders.at("fullScreenQuad").u_locs["horMir"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["verMir"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["grayscale"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["blur"] = -1;
 }
 
 
@@ -983,6 +996,26 @@ void ApplicationSolar::toggleCel() {
   g_cel = !g_cel;
 }
 
+void ApplicationSolar::toggleGrayscale() {
+
+  g_grayscale = !g_grayscale;
+}
+
+void ApplicationSolar::toggleHorizontalMirroring() {
+
+  g_horizontalMirroring = !g_horizontalMirroring;
+}
+
+void ApplicationSolar::toggleVerticalMirroring() {
+
+  g_verticalMirroring = g_verticalMirroring;
+}
+
+void ApplicationSolar::toggleBlur() {
+
+  g_blur = !g_blur;
+}
+
 
 /**CALLBACK FUNCTIONS -----------------------------------------------------------------------------------------------------------------------------------------**/
 
@@ -1024,6 +1057,23 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
   if (key == GLFW_KEY_M && action == GLFW_PRESS) {
     toggleNormalTexture();
   }
+
+  if (key == GLFW_KEY_7 && action == GLFW_PRESS) {
+    toggleGrayscale();
+  }
+
+  if (key == GLFW_KEY_8 && action == GLFW_PRESS) {
+    toggleHorizontalMirroring();
+  }
+
+  if (key == GLFW_KEY_9 && action == GLFW_PRESS) {
+    toggleVerticalMirroring();
+  }
+
+  if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
+    toggleBlur();
+  }
+
 
   // actualize the shaders and also view matrix of "planet" and "star"
 

@@ -75,7 +75,7 @@ void main() {
   mat3 tsn = mat3(S, T, N);
 
   // normalize again
-  normal = normalize(tsn * mapN);
+  vec3 new_normal = normalize(tsn * mapN);
 
   // calculating colors of the planets --------------------------------------------------------------
 
@@ -96,16 +96,18 @@ void main() {
 
   // diffuse light
   vec3 diffuse_part = max(dot(normal, l), 0) * LIGHT_DIFFUSE;
+  vec3 n_diffuse_part = max(dot(new_normal, l), 0) * LIGHT_DIFFUSE;
 
   // specular light
   vec3 specular_part = pow(max(dot(h, normal), 0), SHININESS) * LIGHT_SPECULAR;
+  vec3 n_specular_part = pow(max(dot(h, new_normal), 0), SHININESS) * LIGHT_SPECULAR;
 
   // results ------------------------------------------------------------------------------------------------------------------
 
   colorResult = vec4((LIGHT_AMBIENT + diffuse_part) * planet_Color * light_Intensity + specular_part * light_Color, 1.0);
   textureResult = vec4((LIGHT_AMBIENT + diffuse_part) * textureOfPlanet.rgb + specular_part * light_Color, 1.0);
   // textureResult = textureOfPlanet;
-  normalTextureResult = vec4((LIGHT_AMBIENT + diffuse_part) * NormalTextureOfPlanet.rgb + specular_part * light_Color, 1.0);
+  normalTextureResult = vec4((LIGHT_AMBIENT + n_diffuse_part) * NormalTextureOfPlanet.rgb + n_specular_part * light_Color, 1.0);
   
   // if case for the cel-shading
   if (Cel) {
