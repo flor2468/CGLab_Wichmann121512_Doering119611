@@ -32,6 +32,9 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
   initializePlanets();
   initializeTexture();
   initializeStars();
+  // initial_resolution is size of window -> defined in framework/application.cpp
+  initializeFramebuffer(initial_resolution.x, initial_resolution.y);
+  initializeFullScreenQuad();
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -45,9 +48,39 @@ ApplicationSolar::~ApplicationSolar() {
 
 
 void ApplicationSolar::render() {
+  
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuff_object.handle);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_DEPTH_TEST);
+
   drawPlanets();
   drawLight();
   drawStars();
+  
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_DEPTH_TEST);
+
+  drawFullScreenQuad();
+}
+
+
+void ApplicationSolar::drawFullScreenQuad() {
+
+  glUseProgram(m_shaders.at("fullScreenQuad").handle);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, framebuff_object.handle_texture);
+
+  // add sampler
+  int g_locationScreenTexture = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "TextureScreenQuad");
+  glUniform1i(g_locationScreenTexture, 0);
+
+  //render quad
+  glBindVertexArray(full_screen_quad_object.vertex_AO);
+  glDrawArrays(full_screen_quad_object.draw_mode, 0, full_screen_quad_object.num_elements);
 }
 
 
@@ -248,6 +281,118 @@ void ApplicationSolar::uploadUniforms() {
   glUseProgram(m_shaders.at("star").handle);
   uploadView("star");
   uploadProjection("star");
+
+  glUseProgram(m_shaders.at("fullScreenQuad").handle);
+  // uploadView("fullScreenQuad");
+  // uploadProjection("fullScreenQuad");
+
+}
+
+
+void ApplicationSolar::initializeFramebuffer(int width, int height) {
+
+  // generating the frambuffer object
+  glGenFramebuffers(1, &framebuff_object.handle);
+  glBindFramebuffer(GL_FRAMEBUFFER, framebuff_object.handle);
+
+  // creating the color attachment with a texture object
+  texture_object col_attach;
+
+  // initialise texture
+  glActiveTexture(GL_TEXTURE0);
+
+  glGenTextures(1, &col_attach.handle);
+
+  col_attach.target = GL_TEXTURE_2D;
+
+  glBindTexture(col_attach.target, col_attach.handle);
+
+  // define the texture parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // define the texture data and its format
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, col_attach.handle, 0);
+
+  framebuff_object.color_attachment = col_attach;
+  framebuff_object.handle_texture = col_attach.handle;
+
+  glGenRenderbuffers(1, &framebuff_object.handle_renderbuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, framebuff_object.handle_renderbuffer);
+
+  // must be a color-renderable, depth-renderable, or stencil-renderable format -> https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glRenderbufferStorage.xhtml
+  // https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glTexImage2D.xml
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, framebuff_object.handle_renderbuffer);
+
+  // Define which Buffers to Write
+  GLenum draw_buffers[1] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, draw_buffers);
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    std::cout << "Could not write framebuffer." << std::endl;
+  }
+
+  else {
+    std::cout << "Writing framebuffer successfull." << std::endl;
+  }
+}
+
+
+void ApplicationSolar::initializeFullScreenQuad() {
+
+  std::vector<GLfloat> screenQuad = {
+
+    // first triangle
+
+    // v4
+    -1.0f, 1.0f, 0.0f, 1.0f,
+    // v1
+    -1.0f, -1.0f, 0.0f, 0.0f,
+    // v2
+    1.0f, -1.0f, 1.0f, 0.0f,
+
+    // second triangle
+
+    // v4
+    -1.0f, 1.0f, 0.0f, 1.0f,
+    // v2
+    1.0f, -1.0f, 1.0f, 0.0f,
+    // v3
+    1.0f, 1.0f, 1.0f, 1.0f
+  };
+
+  // initializing the screen quad object like the star object
+
+  // Initialise Vertex Array Object
+  glGenVertexArrays(1, &full_screen_quad_object.vertex_AO);
+  glBindVertexArray(full_screen_quad_object.vertex_AO);
+
+  // Initialise Vertex Buffer Object and load data
+  glGenBuffers(1, &full_screen_quad_object.vertex_BO);
+  glBindBuffer(GL_ARRAY_BUFFER, full_screen_quad_object.vertex_BO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*screenQuad.size(), screenQuad.data(), GL_STATIC_DRAW);
+  
+  // Specify (activate, connect and set format) the Attributes..
+  //..for position
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 4), 0);
+  
+  // ...for color
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)* 4), (void*) (sizeof(float)*2));
+
+  // set the draw_mode of the star_object to GL_POINTS, because each star is represented by one point
+  full_screen_quad_object.draw_mode = GL_TRIANGLE_STRIP; 
+  full_screen_quad_object.num_elements = GLsizei(screenQuad.size() / 4);
+
+
 }
 
 
@@ -583,6 +728,13 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.at("star").u_locs["ModelMatrix"] = -1;
   m_shaders.at("star").u_locs["ViewMatrix"] = -1;
   m_shaders.at("star").u_locs["ProjectionMatrix"] = -1;
+
+  // shader program for the full screen quad
+  m_shaders.emplace("fullScreenQuad", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/screenQuad.vert"},
+                                                   {GL_FRAGMENT_SHADER, m_resource_path + "shaders/screenQuad.frag"}}});
+
+  m_shaders.at("fullScreenQuad").u_locs["TextureScreenQuad"] = -1;
+
 }
 
 

@@ -68,6 +68,10 @@ class ApplicationSolar : public Application {
   void initializeSkyBox();
   void drawSkyBox();
 
+  void initializeFramebuffer(int width, int height);
+  void initializeFullScreenQuad();
+  void drawFullScreenQuad();
+
  protected:
   void initializeShaderPrograms();
   void initializeGeometry();
@@ -82,7 +86,11 @@ class ApplicationSolar : public Application {
   model_object planet_object;
 
   model_object star_object;
-  
+
+  framebuffer_object framebuff_object;
+
+  model_object full_screen_quad_object;
+
   // camera transform matrix
   glm::fmat4 m_view_transform;
   // camera projection matrix

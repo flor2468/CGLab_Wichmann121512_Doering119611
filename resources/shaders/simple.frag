@@ -20,6 +20,8 @@ uniform bool Cel;
 // boolean if texture of planets should be active
 uniform bool Texture;
 
+// uniform bool TextureScreenQuad;
+
 uniform bool NormalTexture;
 
 vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be very bright)
@@ -125,12 +127,13 @@ void main() {
         // if (abs(dot(normal, v)) < 0.2) {
         //   out_Color = vec4(0.0, 0.0, 1.0, 1.0);
         // }
+
    // else for texture
   } else if (Texture) {   
     out_Color = textureResult;
   } else if (NormalTexture) {
     out_Color = normalTextureResult;
-    // else for "normal" light/ color
+  // else for "normal" light/ color
   } else {   
     out_Color = colorResult;
   }
