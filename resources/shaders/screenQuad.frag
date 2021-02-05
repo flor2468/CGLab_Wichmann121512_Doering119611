@@ -4,12 +4,12 @@ in vec2 pass_TexCoord;
 
 out vec4 out_Color;
 
-uniform sampler2D TextureScreenQuad;
+uniform sampler2D Processing;
 
-uniform bool horMir;
-uniform bool verMir;
-uniform bool grayscale;
-uniform bool blur;
+uniform bool Gray;
+uniform bool HorizontalMirroring;
+uniform bool VerticalMirroring;
+uniform bool Blur;
 
 float pixel = 1.0/350;
 vec2 pixels[9];
@@ -23,33 +23,32 @@ vec2 texCoord = pass_TexCoord;
 
 void main() {
 
-    out_Color = texture(TextureScreenQuad, texCoord);
+    out_Color = texture(Processing, texCoord);
 
     // inverting the texture coordinates around the desired axes (here y)
-    if (horMir) {
+    if (HorizontalMirroring) {
 
         texCoord.y = 1.0 - texCoord.y;
-        out_Color = texture(TextureScreenQuad, texCoord);
+        out_Color = texture(Processing, texCoord);
 
     }
 
     // inverting the texture coordinates around the desired axes (here x)
-    if (verMir) {
+    if (VerticalMirroring) {
 
         texCoord.x = 1.0 - texCoord.x;
-        out_Color = texture(TextureScreenQuad, texCoord);
+        out_Color = texture(Processing, texCoord);
 
     }
 
     // computing grayscale with the luminance like it's given in the slides
-    if (grayscale) {
+    if (Gray) {
 
         lum = (0.2126 * out_Color.r + 0.7152 * out_Color.g + 0.0722 * out_Color.b);
         out_Color = vec4(lum, lum, lum, 1.0);
-
     }
 
-    if (blur) {
+    if (Blur) {
 
         // 3x3 gaussian kernel matrix is needed (defining it like in the slides):
 
@@ -75,7 +74,7 @@ void main() {
        
 
         for (int i = 0; i < 9; i++) {
-            sum[i] = vec3(texture(TextureScreenQuad, texCoord.st + pixels[i]));
+            sum[i] = vec3(texture(Processing, texCoord.st + pixels[i]));
         }
 
         vec3 result = vec3(0.0, 0.0, 0.0);

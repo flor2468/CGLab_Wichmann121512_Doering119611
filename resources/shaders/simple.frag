@@ -19,9 +19,7 @@ uniform vec3 camera;
 uniform bool Cel;
 // boolean if texture of planets should be active
 uniform bool Texture;
-
-// uniform bool TextureScreenQuad;
-
+// boolean if normal texture of planets should be active
 uniform bool NormalTexture;
 
 vec3 LIGHT_AMBIENT = vec3(0.7, 0.7, 0.7); // 0.1 -> sun in exception (should be very bright)
@@ -34,7 +32,7 @@ vec4 normalTextureResult;
 
 // textures
 uniform sampler2D TexturePlanet;
-
+// normal textures
 uniform sampler2D NormalTexturePlanet;
 
 

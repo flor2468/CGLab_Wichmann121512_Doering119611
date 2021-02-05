@@ -4,7 +4,8 @@
 const int STARCOUNT = 1000;
 //vector of stars
 std::vector<float> stars {};
-// location ogf uniform variable "Cel"
+
+// location of uniform variable "Cel"
 static GLuint g_locationCel;
 // boolen if cel is active
 GLboolean g_cel = GL_FALSE;
@@ -14,15 +15,29 @@ static GLuint g_locationTexture;
 /** boolean if texture is active */
 GLboolean g_texture = GL_TRUE;
 
+/** location of uniform-variable "NormalTexture" */
 static GLuint g_locationNormalTexture;
-
+/** boolean if normal texture is active */
 GLboolean g_normal_texture = GL_FALSE;
 
-
+/** boolean if luminance preserving grayscale is active */
 GLboolean g_grayscale = GL_FALSE;
+/** boolean if horizontal mirroring is active */
 GLboolean g_horizontalMirroring = GL_FALSE;
+/** boolean if vertical mirroring is active */
 GLboolean g_verticalMirroring = GL_FALSE;
+/** boolean if blur is active */
 GLboolean g_blur = GL_FALSE;
+/** location of uniform variable "Processing" */
+static GLuint g_processing_location;
+/** location of uniform variable "Gray" */
+static GLuint g_locationGray;
+/** location of uniform variable "HorizontalMirroring" */
+static GLuint g_locationHorizontalMirroring;
+/** location of uniform variable "VerticalMirroring" */
+static GLuint g_locationVerticalMirroring;
+/** location of uniform variable "Blur" */
+static GLuint g_locationBlur;
 
 
 ApplicationSolar::ApplicationSolar(std::string const& resource_path)
@@ -81,8 +96,13 @@ void ApplicationSolar::drawFullScreenQuad() {
   glBindTexture(GL_TEXTURE_2D, framebuff_object.handle_texture);
 
   // add sampler
-  int g_locationScreenTexture = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "TextureScreenQuad");
-  glUniform1i(g_locationScreenTexture, 0);
+  //int g_locationScreenTexture = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "TextureScreenQuad");
+  //glUniform1i(g_locationScreenTexture, 0);
+
+   // upload the processing unit data to the shader
+      g_processing_location = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "Processing");
+      //glUseProgram(m_shaders.at("fullScreenQuad").handle);
+      glUniform1i(g_processing_location, 0);
 
   //render quad
   glBindVertexArray(full_screen_quad_object.vertex_AO);
@@ -192,7 +212,7 @@ void ApplicationSolar::drawPlanets() {
 
       glUniform1i(normal_texture_location, normalObject.handle);
 
-      /** CEL SHADING **/
+      // for cel-shading *************************************************************************************************
 
       // enables the function that with pressing "O" the outlines are visible or the colors
       g_locationCel = glGetUniformLocation(m_shaders.at("planet").handle, "Cel");
@@ -257,6 +277,7 @@ void ApplicationSolar::drawSkyBox() {
 
 void ApplicationSolar::uploadView(std::string shader) {
   
+  std::cout << g_grayscale << std::endl;
   // vertices are transformed in camera space, so camera transform must be inverted
   glm::fmat4 view_matrix = glm::inverse(m_view_transform);
   
@@ -276,7 +297,6 @@ void ApplicationSolar::uploadProjection(std::string shader) {
 
 /* update uniform locations */
 void ApplicationSolar::uploadUniforms() { 
-
   // every shader must be actualized (planet and star)
   // bind shader to which to upload unforms
   glUseProgram(m_shaders.at("planet").handle);
@@ -290,12 +310,21 @@ void ApplicationSolar::uploadUniforms() {
 
   glUseProgram(m_shaders.at("fullScreenQuad").handle);
 
-  // part for the ScreenQuad
+  // enables the function that with pressing "7" the luminance preserving grayscale is visible
+  g_locationGray = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "Gray");
+  glUniform1i(g_locationGray, g_grayscale);
 
-  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("horMir"), g_horizontalMirroring);
-  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("verMir"), g_verticalMirroring);
-  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("grayscale"), g_grayscale);
-  glUniform1i(m_shaders.at("fullScreenQuad").u_locs.at("blur"), g_blur);
+  // enables the function that with pressing "8" the horizontal mirroring is visible
+  g_locationHorizontalMirroring = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "HorizontalMirroring");
+  glUniform1i(g_locationHorizontalMirroring, g_horizontalMirroring);
+
+  // enables the function that with pressing "9" the vertical mirroring is visible
+  g_locationVerticalMirroring = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "VerticalMirroring");
+  glUniform1i(g_locationVerticalMirroring, g_verticalMirroring);
+
+  // enables the function that with pressing "0" the blur is visible
+  g_locationBlur = glGetUniformLocation(m_shaders.at("fullScreenQuad").handle, "Blur");
+  glUniform1i(g_locationBlur, g_blur);
 }
 
 
@@ -743,11 +772,7 @@ void ApplicationSolar::initializeShaderPrograms() {
   m_shaders.emplace("fullScreenQuad", shader_program{{{GL_VERTEX_SHADER,m_resource_path + "shaders/screenQuad.vert"},
                                                    {GL_FRAGMENT_SHADER, m_resource_path + "shaders/screenQuad.frag"}}});
 
-  m_shaders.at("fullScreenQuad").u_locs["TextureScreenQuad"] = -1;
-  m_shaders.at("fullScreenQuad").u_locs["horMir"] = -1;
-  m_shaders.at("fullScreenQuad").u_locs["verMir"] = -1;
-  m_shaders.at("fullScreenQuad").u_locs["grayscale"] = -1;
-  m_shaders.at("fullScreenQuad").u_locs["blur"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["Processing"] = -1;
 }
 
 
@@ -997,22 +1022,18 @@ void ApplicationSolar::toggleCel() {
 }
 
 void ApplicationSolar::toggleGrayscale() {
-
   g_grayscale = !g_grayscale;
 }
 
 void ApplicationSolar::toggleHorizontalMirroring() {
-
   g_horizontalMirroring = !g_horizontalMirroring;
 }
 
 void ApplicationSolar::toggleVerticalMirroring() {
-
   g_verticalMirroring = g_verticalMirroring;
 }
 
 void ApplicationSolar::toggleBlur() {
-
   g_blur = !g_blur;
 }
 
@@ -1075,7 +1096,7 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
   }
 
 
-  // actualize the shaders and also view matrix of "planet" and "star"
+  // actualize the shaders and also view matrix of "planet" and "star" and "fullScreenQuad"
 
   glUseProgram(m_shaders.at("planet").handle);
   uploadView("planet");
@@ -1083,6 +1104,7 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
   glUseProgram(m_shaders.at("star").handle);
   uploadView("star");
 
+  glUseProgram(m_shaders.at("fullScreenQuad").handle);
 }
 
 //handle delta mouse movement input
