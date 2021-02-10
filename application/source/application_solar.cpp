@@ -374,6 +374,7 @@ void ApplicationSolar::initializeFramebuffer(int width, int height) {
   GLenum draw_buffers[1] = {GL_COLOR_ATTACHMENT0};
   glDrawBuffers(1, draw_buffers);
 
+  // checking if framebuffer could be generated
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
     std::cout << "Could not write framebuffer." << std::endl;
   }
@@ -386,6 +387,7 @@ void ApplicationSolar::initializeFramebuffer(int width, int height) {
 
 void ApplicationSolar::initializeFullScreenQuad() {
 
+  // creating screen quad like in the slides
   std::vector<GLfloat> screenQuad = {
 
     // first triangle
@@ -427,7 +429,7 @@ void ApplicationSolar::initializeFullScreenQuad() {
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)* 4), (void*) (sizeof(float)*2));
 
-  // set the draw_mode of the star_object to GL_POINTS, because each star is represented by one point
+  // set the draw_mode of the screenQuad_object to GL_POINTS, because each screenQuad is represented by triangle
   full_screen_quad_object.draw_mode = GL_TRIANGLE_STRIP; 
   full_screen_quad_object.num_elements = GLsizei(screenQuad.size() / 4);
 
@@ -1015,24 +1017,28 @@ void ApplicationSolar::toggleNormalTexture () {
     g_normal_texture = !g_normal_texture;
 }
 
-
+// (de)activates the cel shading mode
 void ApplicationSolar::toggleCel() {
   /* change state */
   g_cel = !g_cel;
 }
 
+// (de)activates the gray scale mode
 void ApplicationSolar::toggleGrayscale() {
   g_grayscale = !g_grayscale;
 }
 
+// (de)activates the horizontal mirroring mode
 void ApplicationSolar::toggleHorizontalMirroring() {
   g_horizontalMirroring = !g_horizontalMirroring;
 }
 
+// (de)activates the vertical mirroring mode
 void ApplicationSolar::toggleVerticalMirroring() {
   g_verticalMirroring = g_verticalMirroring;
 }
 
+// (de)activates the blur mode
 void ApplicationSolar::toggleBlur() {
   g_blur = !g_blur;
 }

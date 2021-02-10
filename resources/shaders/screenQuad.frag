@@ -72,13 +72,14 @@ void main() {
             vec2(pixel, -pixel)
         );
        
-
+        // set the i-th element of the sum
         for (int i = 0; i < 9; i++) {
             sum[i] = vec3(texture(Processing, texCoord.st + pixels[i]));
         }
 
         vec3 result = vec3(0.0, 0.0, 0.0);
 
+        // sum up in the result
         for (int i = 0; i < 9; i++) {
             result += sum[i] * kernel[i];
         }
