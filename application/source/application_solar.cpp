@@ -775,6 +775,10 @@ void ApplicationSolar::initializeShaderPrograms() {
                                                    {GL_FRAGMENT_SHADER, m_resource_path + "shaders/screenQuad.frag"}}});
 
   m_shaders.at("fullScreenQuad").u_locs["Processing"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["Gray"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["HorizontalMirroring"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["VerticalMirroring"] = -1;
+  m_shaders.at("fullScreenQuad").u_locs["Blur"] = -1;
 }
 
 
@@ -1104,13 +1108,14 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 
   // actualize the shaders and also view matrix of "planet" and "star" and "fullScreenQuad"
 
-  glUseProgram(m_shaders.at("planet").handle);
-  uploadView("planet");
+  // glUseProgram(m_shaders.at("planet").handle);
+  // uploadView("planet");
 
-  glUseProgram(m_shaders.at("star").handle);
-  uploadView("star");
+  // glUseProgram(m_shaders.at("star").handle);
+  // uploadView("star");
 
-  glUseProgram(m_shaders.at("fullScreenQuad").handle);
+  // glUseProgram(m_shaders.at("fullScreenQuad").handle);
+  uploadUniforms();
 }
 
 //handle delta mouse movement input
